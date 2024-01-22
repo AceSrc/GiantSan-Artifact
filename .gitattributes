@@ -6,3 +6,5 @@ LLVM-GiantSan/lib/libclang.so.12 filter=lfs diff=lfs merge=lfs -text
 LLVM-ASan/lib/libclang.so.12 filter=lfs diff=lfs merge=lfs -text
 LLVM-GiantSan/bin/clang-12 filter=lfs diff=lfs merge=lfs -text
 LLVM-ASan/bin/clang-12 filter=lfs diff=lfs merge=lfs -text
+clang-12 filter=lfs diff=lfs merge=lfs -text
+*lang-12 filter=lfs diff=lfs merge=lfs -text
