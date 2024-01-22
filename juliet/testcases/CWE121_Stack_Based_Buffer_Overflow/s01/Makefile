@@ -1,5 +1,5 @@
-CC=clang -O3 -fsanitize=address -DOMITGOOD
-CPP=clang++ -O3 -fsanitize=address -DOMITGOOD
+CC=clang -O3 -fsanitize=address -DOMITGOOD -g
+CPP=clang++ -O3 -fsanitize=address -DOMITGOOD -g
 DEBUG=-g
 CFLAGS=-c
 LFLAGS=-lpthread -lm

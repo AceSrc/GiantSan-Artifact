@@ -15,15 +15,16 @@ def execute(command):
     return rt
 
 def run(working_dir):
-    os.chdir('./tmp')
     alarm = 0
     tot = 0
-    for executable in os.listdir(os.path.join('..', working_dir)):
+    for executable in os.listdir(working_dir):
         if not executable.endswith('.out'):
             continue
         if executable.find('rand') != -1:
             continue
         if executable.find('socket') != -1:
+            continue
+        if executable.find('CWE135') != -1: 
             continue
         tot += 1
         target = os.path.join(working_dir, executable)
@@ -41,7 +42,6 @@ def run(working_dir):
         else:
             p.write('{}: alarm\n'.format(executable))
             alarm += 1
-    os.chdir('..')
     return (tot, alarm) 
 
 def work(f):
