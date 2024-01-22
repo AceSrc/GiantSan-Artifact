@@ -1,0 +1,44 @@
+0x415978 18 Calling good()...
+0x415990 16 Finished good()
+0x619190 4 
+0x4159a0 21 Benign, fixed string
+0x4159b8 16 /usr/bin/ls -la
+0x4159c8 3 wb
+0x415a68 4 %s
+
+0x415af8 20 %
+0x415a70 4 %d
+
+0x415a78 5 %hd
+
+0x415a80 4 %f
+
+0x415a88 5 %ld
+
+0x415a90 5 %zu
+
+0x415a98 6 %02x
+
+0x415aa0 5 %ls
+
+0x415aa8 4 %u
+
+0x415ab0 4 %g
+
+0x415ab8 10 %d -- %d
+
+0x415ac8 5 %02x
+0x415ad0 1 
+0x415b10 20 %
+0x415ad8 11 GlobalTrue
+0x415ae8 12 GlobalFalse
+0x415a50 4 
+0x415a58 4 
+0x415a60 4 
+0x619198 4 
+0x619458 4 
+0x6191a0 4 
+0x619460 4 
+0x619468 8 
+Calling good()...
+Finished good()

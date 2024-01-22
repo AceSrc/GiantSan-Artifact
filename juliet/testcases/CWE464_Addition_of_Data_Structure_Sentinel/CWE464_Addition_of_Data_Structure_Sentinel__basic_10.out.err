@@ -1,0 +1,43 @@
+0x4148f8 18 Calling good()...
+0x414910 16 Finished good()
+0x414920 21 Benign, fixed string
+0x4149d0 4 %s
+
+0x414a60 20 %
+0x4149d8 4 %d
+
+0x4149e0 5 %hd
+
+0x4149e8 4 %f
+
+0x4149f0 5 %ld
+
+0x4149f8 5 %zu
+
+0x414a00 6 %02x
+
+0x414a08 5 %ls
+
+0x414a10 4 %u
+
+0x414a18 4 %g
+
+0x414a20 10 %d -- %d
+
+0x414a30 5 %02x
+0x414a38 1 
+0x414a78 20 %
+0x414a40 11 GlobalTrue
+0x414a50 12 GlobalFalse
+0x4149b8 4 
+0x4149c0 4 
+0x4149c8 4 
+0x618180 4 
+0x618438 4 
+0x618188 4 
+0x618440 4 
+0x618448 8 
+Calling good()...
+xaz
+xaz
+Finished good()

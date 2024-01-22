@@ -1,0 +1,573 @@
+Additional technical documentation about ImageWorsener
+======================================================
+
+This file contains extra information about ImageWorsener. The main
+documentation is in readme.txt.
+
+Web site: <http://entropymine.com/imageworsener/>
+
+Acknowledgments
+---------------
+
+Some of the inspiration for this project came from these web pages:
+  "Gamma error in picture scaling"
+    http://www.4p8.com/eric.brasseur/gamma.html
+  "How to make a resampler that doesn't suck"
+    http://www.virtualdub.org/blog/pivot/entry.php?id=86
+
+Information about resampling functions and other algorithms was gathered from
+many sources, but ImageMagick's page on resizing was particularly helpful:
+  http://www.imagemagick.org/Usage/resize/
+
+Alternatives
+------------
+
+There are many applications and libraries that do image processing, but in the
+free software world, the leader is ImageMagick (http://www.imagemagick.org/).
+Or you might prefer ImageMagick's conservative alter-ego, GraphicsMagick
+(http://www.graphicsmagick.org/).
+
+Installing / Building from source
+---------------------------------
+
+Dependencies (optional):
+  libpng <http://www.libpng.org/pub/png/libpng.html>
+  zlib <http://zlib.net/>
+  libjpeg <http://www.ijg.org/>
+  libwebp
+     <http://www.webmproject.org/code/#libwebp_webp_image_decoder_library>
+
+Here are three possible ways to build ImageWorsener:
+
+* Prebuilt Visual Studio 2008 project files
+
+Open the scripts/imagew2008.sln file in Visual Studio 2008 or newer.
+
+To compile without libwebp: Edit the project settings to not link to
+libwebp.lib, and change the line in src/imagew-config.h to
+"#define IW_SUPPORT_WEBP 0".
+
+* Generic Makefile
+
+In a Unix-ish environment, try typing "make -C scripts". It should build an
+executable file named "imagew" or "imagew.exe".
+
+To compile without libwebp: Set the "IW_SUPPORT_WEBP" environment variable to
+"0" (type "IW_SUPPORT_WEBP=0 make").
+
+* Using autotools
+
+Official source releases contain a file named "configure". In simplest form,
+run
+   ./configure
+then
+   make
+
+Many options can be passed to the "configure" utility. For help, run
+   ./configure --help
+Suggested options:
+   CFLAGS="-g -O3" ./configure --disable-shared
+
+If there is no "configure" file in the distribution you're using, you need to
+generate it by running
+   scripts/autogen.sh
+You must have GNU autotools (autoconf, automake, libtool) installed. To clean
+up the mess made by autogen.sh, run
+   scripts/autogen.sh clean
+
+Philosophy
+----------
+
+ImageWorsener attempts to have good defaults. The user should not have to know
+anything about gamma correction, bit depths, filters, windowing functions,
+etc., in order to get good results.
+
+IW tries to be as accurate as possible. It never trades accuracy for speed.
+Really, it goes too far, as nearly everyone would rather have a program that
+works twice as fast and is imperceptibly less accurate. But there are lots
+of utilities that are optimized for speed, and there would be no reason for
+IW to exist if it worked the same as everything else.
+
+I don't intend to add millions of options to IW. It is nearly feature complete
+as it is. I want most of the options to have some practical purpose (which may
+include the ability to imitate what other applications do). Admittedly, some
+fairly useless options exist just for orthogonal completeness, or to scratch
+some particular itch I had.
+
+I've taken a lot of care to make sure the resizing algorithms are implemented
+correctly. I won't add an algorithm until I'm sure that I understand it. This
+isn't so easy. There's a lot of confusing and contradictory information out
+there.
+
+IW's command line should not be thought of as a sequence of image processing
+commands. Instead, imagine you're describing the properties of a display
+device, and IW will try to create the best image for that device. For example,
+if you tell IW to dither an image and resize it, it knows that it should
+resize the image first, then dither it, instead of doing it in the opposite
+order.
+
+IW does not really care about the details of how an image is stored in a file;
+it only cares about the essential image itself. For example, a 1-bit image is
+treated the same as an 8-bit representation of the same image. If you resize a
+bilevel image, you'll automatically get high quality grayscale image, not a
+low quality bilevel image.
+
+Architecture
+------------
+
+IW has three components: The core library, the auxiliary library, and the
+command-line utility.
+
+The core library does the image processing, but does not do any file I/O. It
+knows almost nothing about specific file formats. It has access to the
+internal data structures defined in imagew-internals.h. It does not make any
+direct calls to the auxiliary library.
+
+The auxiliary library consists of the file I/O code that is specific to file
+formats like PNG and JPEG. It does not use the internal data structures from
+imagew-internals.h.
+
+The public interface is completely defined in the imagew.h file. It includes
+declarations for both the core and auxiliary library.
+
+The command-line utility is implemented in imagew-cmd.c. It uses both the core
+library and the auxiliary library.
+
+The core and auxiliary libraries are separated in order to break dependencies.
+For example, if your application supports only PNG files, you can probably
+(given how most linkers work) build it without linking to libjpeg.
+
+Files in core library:
+ imagew-internals.h, imagew-main.c, imagew-resize.c, imagew-opt.c,
+ imagew-api.c, imagew-util.c
+
+Files in auxiliary library:
+ imagew-png.c, imagew-jpeg.c, imagew-webp.c, imagew-gif.c, imagew-miff.c,
+ imagew-bmp.c, imagew-tiff.c, imagew-pnm.c, imagew-zlib.c, imagew-allfmts.c
+
+Files in command-line utility:
+ imagew-cmd.c, imagew.rc, imagew.ico
+
+Other files:
+ imagew.h (Public header file, Core, Aux., Command-line)
+ imagew-config.h (Core, Aux., Command-line)
+
+Security
+--------
+
+IW is intended to be safe to use with untrusted image files. However, despite
+my best efforts, it's a near certainty that security vulnerabilities do exist
+in it. Use at your own risk. Note that IW uses third-party libraries that may
+have their own vulnerabilities, especially if out of date versions are used.
+
+It's even more likely the "denial of service"-type vulnerabilities exist, in
+which reading an image file will cause it to use an inordinate amount of memory
+and/or time. If you're using the library, this may be partially mitigated by
+calling iw_set_max_malloc(), iw_set_value(IW_VAL_MAX_WIDTH), and
+iw_set_value(IW_VAL_MAX_HEIGHT).
+
+The command-line utility is *not* intended to be safe to use if any part of the
+command line is untrusted.
+
+If you write a script that uses the imagew utility, it's good practice to
+prefix all filenames with "file:". Otherwise, you can run into problems with
+pathological filenames like "clip:.jpg".
+
+Unicode
+-------
+
+Text files like this one notwithstanding, I've had enough of ASCII, and I want
+to support Unicode even in an application like this that does very little with
+text. IW supports Unicode filenames, and will try to use Unicode quotation
+marks, arrows, etc., if possible. If IW does not correctly figure out the
+encoding you want, you can explicitly set it using the "-encoding" option. In
+a Unix environment, Unicode output can also probably be turned off with
+environment variables, such as by setting "LANG=C".
+
+The encoding setting does not affect the interpretation of the parameters on
+the command line. This should not be a problem in Windows, because Windows can
+translate them. But on a Unix system, they are always assumed to be UTF-8.
+
+All strings produced by the library (e.g. error messages) are encoded in UTF-8.
+Applications must convert them if necessary.
+
+Rationale for the default resizing algorithm
+--------------------------------------------
+
+By default, IW uses a Catmull-Rom ("catrom") filter for both upscaling and
+downscaling. Why?
+
+For one thing, I don't want to default to a filter that has any inherent
+blurring. A casual user would expect that when you "resize" an image without
+changing the size, it will not modify the image at all. This requirement
+eliminates mitchell, gaussian, etc.
+
+The "echoes" produced by filters like lanczos(3) are too weird, I think; and
+they can be too severe when using proper gamma correction.
+
+When upscaling, hermite, triangle, and pixel mixing just don't have acceptable
+quality. That really only leaves catrom and lanczos2. I somewhat arbitrarily
+chose catrom over lanczos2 (they are almost identical).
+
+When downscaling, the differences between various algorithms are much more
+subtle. Hermite and pixel mixing are both reasonable candidates, and are nice
+in that they have no ringing at all. But they're not quite as sharp as catrom,
+and can do badly with images that have thin lines or repetetive details.
+
+Colorspaces
+-----------
+
+Unless it has reason to believe otherwise, IW assumes that images use the sRGB
+colorspace. This is the colorspace that standard computer monitors use, and
+it's a reasonable assumption that most computer image files (whether by
+accident or design) are intended to be directly displayable on computer
+monitors.
+
+It does this even if the file format predates the invention of sRGB, and/or
+the file format specification says that, by default, colors have a gamma of
+2.2 (which is similar, but not identical, to sRGB).
+
+The Netpbm formats (PNM/PPM/PGM/PBM) are technically supposed to use the
+Rec. 709 colorspace, but IW assumes they use sRGB, because that's more than
+likely what you really want. If you do want Rec. 709, use "-inputcs rec709"
+(when reading) and/or "-cs rec709" (when writing).
+
+IW does not support ICC color profiles. Full or partial support for them may
+be added in a future version.
+
+Grayscale images
+----------------
+
+IW does not treat grayscale images in any special way. It believes that
+grayscale is nothing more than an efficient way to store RGB images whose
+pixels' colors all happen to be shades of gray.
+
+I have come to realize that this is a somewhat unorthodox viewpoint. There is
+a school of thought that says that grayscale is primarily used for things like
+alpha channels and test patterns, not photographic images, and as such should
+be treated as a special kind of image.
+
+As evidence, note that the TIFF specification says that grayscale images use
+linear color, while other images are gamma corrected. And the PNG specification
+does not allow color profiles to be embedded in grayscale images, unless they
+are special grayscale profiles.
+
+I understand this viewpoint, but for the time being I reject it. It causes way
+more problems than it solves. Only experts need grayscale to be special, and
+experts are capable of arranging for that to happen.
+
+Negative image
+--------------
+
+The -negate option makes a negative image, in the target colorspace. This is
+not a very scientifically meaningful thing to do. It would make at least some
+sense to do it in a linear colorspace, but that tends to make images look way
+too bright.
+
+TIFF output support
+-------------------
+
+IW mainly sticks to the "baseline" TIFF v6 specification, but it will write
+images with a sample depth of 16 bits, which is not part of the baseline spec.
+It writes transparent images using unassociated alpha, which is probably less
+common in TIFF files than associated alpha, and may not be supported as well
+by TIFF viewers.
+
+TIFF colorspaces
+----------------
+
+When writing TIFF files, IW uses the TransferFunction TIFF tag to describe the
+colorspace that the output image uses. I doubt that many TIFF viewers read
+this tag, and actually, I don't even know how to test whether I'm using it
+correctly. You can disable the TransferFunction tag by using the "-nocslabel"
+option.
+
+GIF screen size vs. image size
+------------------------------
+
+Every GIF file has a global "screen size", and a sequence of one or more
+images. Each image has its own size, and an offset to indicate its position on
+the screen. By default, IW treats the screen size as the final image size, and
+paints the GIF image (as selected by the -page option) onto the screen at the
+appropriate position. Any area not covered by the image will be made
+transparent.
+
+If you use the -noincludescreen option, it will instead ignore the screen size
+and the image position, and extract just the selected image.
+
+MIFF support
+------------
+
+IW can write to ImageMagick's MIFF image format, and can read back the small
+subset of MIFF files that it writes. MIFF supports floating point samples, and
+this is intended to be used to store intermediate images, in order to perform
+multiple operations on an image with no loss of precision. MIFF support is
+experimental and incomplete. Some features, such as dithering, may not be
+supported with floating point output.
+
+To use ImageMagick to write a MIFF file that IW can read, try:
+$ convert <input-file> -define quantum:format=floating-point -depth 32 \
+ -compress Zip <output-file.miff>
+
+Non-square pixels
+-----------------
+
+Most image formats can contain metadata specifying different "densities" (i.e.
+number of pixels/inch) for the X and Y dimension. In other words, the pixels
+can be thought of as being non-square rectangles.
+
+Non-square pixels are a pain, and make it really messy to figure out the best
+size and density to use for the output image, if (as usually the case) the
+user did not fully specify that information.
+
+IW's rules are as follows:
+
+If the user used the -noresize option, behave as if the user requested a height
+and width that are exactly the size of the source image, and did not use
+-bestfit.
+
+If the user specified both the width and the height (absolute or relative), and
+did not use the -bestfit flag, then IW doesn't have to "fit" the image in any
+way, so there's no real difficulty. If a density is written to the output
+image, it will likely indicate non-square pixels.
+
+Otherwise, for the purposes of sizing, IW pretends that the input image is a
+larger image (as measured by number of pixels) with square pixels. For example,
+if an image is 150x150 pixels with a density of 100x200dpi, it will behave as
+if it were 300x150, with a density of 200x200dpi. Thus, even if you don't tell
+it to resize the image at all, the output image will be a different size in
+pixels. If you use relative sizing (e.g. "-w x2"), it will be relative to the
+adjusted size, not the original size.
+
+"Color" of transparent pixels
+-----------------------------
+
+In image formats that use unassociated alpha values to indicate transparency,
+pixels that are fully transparent still have "colors", but those colors are
+irrelevant. IW will not attempt to retain such colors, and will make fully-
+transparent pixels black in most cases. An exception is if the output image
+uses color-keyed transparency, or if a paletted image's transparent palette
+entry is also being used to store the background color label.
+
+This is documented in the interest of making IW's behavior well-defined and
+clearly documented, not because there's anything unusual about it.
+
+Writing background color labels
+-------------------------------
+
+Writing a background color to the image's metadata is supported for PNG and
+MIFF files. Labels will be copied from the input file, unless the
+-nobkgdlabel option is used, or a color is specified using -bkgdlabel. If the
+output depth is 8 bits or fewer, background colors have a precision of 8 bits
+per sample; otherwise their precision is 16 bits. The -grayscale option will
+convert the background color label to grayscale. Posterization (-cc and related
+options) has no effect on background color labels.
+
+The background color is considered to be critical, in that the image will not
+be optimized to a format that cannot store it at its full precision. For
+example, a non-gray background color may prevent an otherwise-grayscale image
+from being written to a grayscale format. Or, if an image has exactly 256
+different colors, and a background color that is not identical to any of them,
+it will not be possible to write the image as a paletted PNG image.
+
+Box filter
+----------
+
+It's not obvious how a box filter should behave when a source pixel falls
+right on the boundary between two target pixels. There seem to be several
+options:
+1. "Clone" the source pixel, and put it into both "boxes" (target pixels).
+2. "Split" the source pixel, and put it into both boxes, but with half the
+   usual weight. This is the most logical solution, but it violates the idea
+   of a box filter being a constant-value filter.
+3. Arbitrarily select one of the two boxes (which could be the left box, the
+   right box, or some other strategy like selecting the box nearest to the
+   center of the image).
+4. Ignore the problem, in which case the algorithm may behave unpredictably,
+   due to the intricacies of floating point rounding. It may sometimes clone,
+   sometimes round, and sometimes skip over a pixel completely.
+
+IW's "box" filter arbitrarily selects the left (or top) box. To make it select
+the right (or bottom) box instead, you could translate the image by a very
+small amount; e.g. "-translate 0.000001,0.000001". To use the "clone" strategy,
+use a very small blur; e.g. "-blur 1.000001".
+
+IW's "boxavg" filter implements the "split" strategy. Instead of using box(x)
+directly, it uses ( box(x-epsilon) + box(x+epsilon) ) / 2. In effect, this
+means it uses a box filter variant which has isolated points at (-0.5, 0.5) and
+(0.5, 0.5). The difference between "box" and "boxavg" can be seen by, for
+example, reducing an image dimension by exactly 1/3 (e.g. from 300 to 200
+pixels).
+
+Nearest neighbor
+----------------
+
+When using the nearest neighbor algorithm, if a target pixel is equally close
+to two source pixels, it will be given the color of the one to the right (or
+bottom). This is the same tiebreaking logic as is used for the box filter. (It
+may sound like it's the opposite, but it's not: image features are shifted to
+the left in each case.) As with a box filter, you can change this by
+translating the image by a very small amount.
+
+PNG sBIT chunks
+---------------
+
+If a PNG image contains the rarely-used sBIT chunk, IW will ignore any bits
+that the sBIT chunk indicates are not significant.
+
+Suppose you have an 8-bit grayscale image with an sBIT chunk that says 3 bits
+are significant. This means there will probably be only 8 distinct colors in
+the image, similar to these:
+
+00000000 =   0/255 = 0.00000000
+00100100 =  36/255 = 0.14117647
+01001001 =  73/255 = 0.28627450
+01101101 = 109/255 = 0.42745098
+10010010 = 146/255 = 0.57254901
+10110110 = 182/255 = 0.71372549
+11011011 = 219/255 = 0.85882352
+11111111 = 255/255 = 1.00000000
+
+IW, though, will see only the significant bits, and will interpret the image
+like this:
+
+000 = 0/7 = 0.00000000
+001 = 1/7 = 0.14285714
+010 = 2/7 = 0.28571428
+011 = 3/7 = 0.42857142
+100 = 4/7 = 0.57142857
+101 = 5/7 = 0.71428571
+110 = 6/7 = 0.85714285
+111 = 7/7 = 1.00000000
+
+So, the interpretation is slightly different (e.g. 0.14285714 instead of
+0.14117647).
+
+A similar thing happens with BMP images with 16 bits/pixel, in which a color
+channel usually has 5 or 6 bits. A value of 7/31, for example, is not converted
+to 58/255, but is interpreted as exactly 7/31.
+
+PNG background colors might not respect the sBIT chunk. This behavior may be
+changed in a future version of IW. The PNG specification is not entirely clear
+about what should happen, but for consistency, it would seem that background
+colors probably ought to be affected by sBIT.
+
+BMP RLE transparency
+--------------------
+
+Windows BMP images that use RLE compression can leave the color of some pixels
+undefined, by using "delta" codes, or premature end-of-line codes. Many
+applications interpret these undefined pixels as being the color of the first
+color in the palette. Others interpret them as black. Still others (such as
+IW, Mozilla Firefox, and Google Chrome) interpret them as transparent.
+
+IW has a "-bmptrns" option to create such a transparent BMP, but it's kind of
+a hack. It will only work if the final image has no more than 255 opaque
+colors, and does not have partial transparency. If that's not the case, it will
+fail, and write no image at all.
+
+Transparent BMP images can have up to 256 opaque colors, but IW currently
+limits it to 255. It does not use the first palette color in the image, and
+instead sets it to the background label color (-bkgdlabel), or to an arbitrary
+high-contrast color if no label is available.
+
+IW is not really a good application to use to create images that are restricted
+to a certain number of colors, because it does not support generating optimized
+palettes. If your image has too many colors, the best you can do is to
+posterize it. For example:
+  imagew in.png out.bmp -bmptrns -cc 6,7,6,2 -dither f
+
+Ordered dithering + transparency
+--------------------------------
+
+Ordered (or halftone) dithering with IW can produce poor results when used
+with images that have partial transparency. If you ordered-dither both the
+colors and the alpha channel, you can have a situation where all the (say)
+darker pixels are made transparent, leaving only the lighter pixels visible,
+and making the image much lighter than it should be. This happens because the
+same dither pattern is used for two purposes (color thresholding and
+transparency thresholding).
+
+Obscure details about clamping, backgrounds, and alpha channel resizing
+-----------------------------------------------------------------------
+
+"Clamping" is the restricting of sample values to the range that is
+displayable on a computer monitor. This must be done when writing to any file
+format other than MIFF. But if you use -intclamp, it will also be done at
+other times. Essentially, it will be done as often as possible, after every
+dimension of every resizing operation. If a background is applied after
+resizing, clamping will be done individually to both the alpha channel and the
+color channels, then the background will be applied.
+
+It is not clear to me exactly how intermediate clamping should be done when
+transparency is involved. IW's behavior in this case is not well-defined, and
+may change in future versions.
+
+If you don't use -intclamp, no clamping will be done, except as the very last
+step. If IW applies a background after resizing the image, the alpha channel
+will not be clamped first, so it could actually contain negative opacity
+values. That's hard to envision, but the math works out, and you generally get
+the same result as if you had applied the background before resizing.
+
+Currently, the only time IW applies a background before resizing is when a
+channel offset is being used. This means that using -offset can have
+unexpected side effects if you also use -intclamp.
+
+Cropping
+--------
+
+IW's -crop option crops the image before resizing it, completely ignoring any
+pixels outside the region to crop. This is not quite ideal. Ideally, any pixel
+that could have an effect on the pixels at the edge of the image should be kept
+around until after the resize, then the crop should be completed.
+
+Instead of -crop, you can use the -imagesize feature to avoid this problem.
+However, -imagesize may be slower and more difficult to use.
+
+To do
+-----
+
+Features I'm considering adding:
+
+- More options for specifying the image size to use; e.g. "enlarge the image
+  only if it's smaller than a certain size".
+
+- Faster creation of palette images. (Using a hash table?)
+
+- Better use of colorspace conversion lookup tables. E.g. allow them to be
+  used with 16-bit BMP images.
+
+- Ability to specify the colorspace in which to perform the resizing.
+  Currently, it always tries to use linear color. (You can disable color
+  correction entirely, but that's not the same thing.)
+
+- More configurable options when writing WebP files.
+
+- A callback to allow making a progress meter. (May be difficult to integrate
+  with third-party libraries.)
+
+- Improve speed by using multiple threads. (May be difficult to integrate with
+  third-party libraries.)
+
+- Support writing deflate-compressed TIFF images.
+
+- Hilbert curve dithering. (Will require significant changes.)
+
+- Support for post-processing the image with an "unsharp" filter. (Will require
+  significant changes.)
+
+- Support for reading ICC color profiles.
+
+- Support for writing an image with an arbitrary ICC color profile. (Will
+  require significant changes.)
+
+Contributing
+------------
+
+I may accept code contributions, if they fit the spirit of the project. I will
+probably not accept contributions on which you or someone else claims
+copyright. At this stage, I want to retain the ability to change the licensing
+terms unilaterally.
+
+Of course, the license allows you to fork your own version of ImageWorsener if
+you wish to.

@@ -1,0 +1,171 @@
+Unreleased changes
+ - (None)
+
+Version 1.3.1 - 24 Apr 2017
+ - Security and stability fixes
+
+Version 1.3.0 - 4 Nov 2015
+ - Partial support for OS/2 Bitmap Array BMP files.
+ - Added -negate option.
+ - Added -opt option, for format-specific options.
+ - Discontinued 64-bit floating point precision support.
+
+Version 1.2.0 - 16 Feb 2014
+ - Switched to MIT-style license.
+ - Support for reading and writing Netpbm PAM format.
+ - Partial support for reading files from stdin.
+ - Allow a filename of "-" to mean "stdin:" or "stdout:".
+ - Partial support for writing files to stdout.
+ - Print text output to stderr instead of stdout.
+ - Added -depthcc option.
+ - Support for reading binary PPM, PGM, and PBM (Netpbm) formats.
+ - Fixed -condgrayscale to work when reading MIFF format.
+ - Support for writing the PPM, PGM, and PBM (Netpbm) formats.
+ - Added "rec709" as a colorspace option.
+ - Added -colortype option.
+ - Removed support for non-Unicode Windows builds.
+
+Version 1.1.0 - 2 Feb 2013
+ - Support for background colors with transparency.
+ - Support for background colors in MIFF files.
+ - Added -intent option, to set the rendering intent without setting the
+   colorspace to sRGB.
+ - By default, copy the "rendering intent" setting from the source to the
+   target image.
+ - Support for writing and maintaining background color metadata. Added
+   -bkgdlabel option.
+ - Fixed some issues with clamping interacting badly with transparency.
+   Monochrome images with transparency could have other colors introduced
+   unnecessarily.
+ - Added iw_set_output_image_size() function and -imagesize option.
+
+Version 1.0.0 - 4 Nov 2012
+ - If -blur is used without -filter, default to "-filter gaussian".
+ - Added -s and -S options.
+ - Removed the --with-sample-depth configuration option.
+ - Removed CMake support.
+ - Renamed "boxmv" filter to "boxavg".
+ - Changed how the -encoding option works. On Windows, write UTF-8 text by
+   default if not writing to a console. Removed the "utf8raw" and "utf16raw"
+   options.
+
+Version 0.9.10 - 2 Jun 2012
+ - Support reading and writing BMP files with more than 8 bits per sample.
+ - Support writing v5 BMP files (use -bmpversion 5).
+ - Support for reading some v4 and v5 BMP files.
+ - Support for writing OS/2-style BMP files.
+ - Added -reorient option.
+ - Support for reading Orientation tags from JPEG/Exif files.
+ - Ability to rotate and mirror images.
+ - Added "-precision 32" option.
+ - Added an alternate box filter, "boxmv".
+ - Better support for -grayscale when writing BMP images.
+ - Support "-cc <r>,<g>,<b>" syntax.
+ - [Windows only] Support for reading images from, and writing images to, the
+   clipboard.
+ - Changes to allow data streams other than regular files. Filenames that may
+   contain a colon now need to be prefixed with "file:".
+ - Support for custom bit depths (sBIT chunks) when writing PNG images. Added
+   -depthalpha and -depthgray options.
+ - Support for custom bit depths when writing 16-bit BMP images.
+
+Version 0.9.9 - 29 Mar 2012
+ - Various changes to how non-square pixels are handled. Added -noresize
+   option.
+ - Support for writing 16-bit BMP images.
+ - Support for reading 16- and 32-bit BMP images.
+ - Support for RLE-compressed BMP images with transparency.
+ - Support for reading BMP files.
+ - Support for writing BMP files with RLE4 compression.
+ - Support for writing BMP files with RLE8 compression.
+
+Version 0.9.8 - 18 Feb 2012
+ - Support for building using GNU autotools.
+ - Support for two types of custom grayscale formulas.
+ - Added -gsf as an alias of -grayscaleformula, and made it unnecessary to
+   specify "-grayscale" if you set the grayscale formula.
+ - Support reading CMYK/YCCK JPEG images.
+
+Version 0.9.7 - 30 Dec 2011
+ - Support for custom memory allocation functions.
+ - Renamed -pngcmprlevel option to -zipcmprlevel, and made it apply whenever
+   zip/deflate compression is used.
+ - Added Zip compression support for MIFF images, and made it the default.
+ - Added "-compress" option.
+ - Added support for transparent virtual pixels ("-edge t").
+ - Added "-translate s" option, so you can specify the translation amount in
+   source pixels instead of target pixels.
+ - Enabled transparency support for WebP images.
+ - Made the "edge policy" setting be per-dimension.
+ - Removed the -filteralpha feature.
+ - Stopped disallowing the "s" edge policy when -translate or -offset is used.
+ - Changed the default downscaling filter to catrom.
+ - Changed the box filter to have more predictable behavior.
+
+Version 0.9.6 - 1 Dec 2011
+ - Added -translate option, to fine-tune the position of the image.
+ - Added "-blur x" option, to make it easy to do simple interpolation.
+ - Support -blur when using the "mix" filter.
+ - Added a way to request a specific density label.
+ - Added an option to write JPEG files using arithmetic coding.
+ - Don't clamp alpha samples before using them to apply a background color.
+ - Added -noincludescreen option, for more control over how GIF images are
+   handled.
+ - Added -page option, to read arbitrary images from GIF files.
+ - Changed the default bit depth to always be 8, instead of having it depend
+   on the depth of the input file.
+
+Version 0.9.5 - 8 Oct 2011
+ - Use a binary search to find the nearest available color. Improves speed
+   significantly in many cases.
+ - Random dithering now uses a private pseudorandom number generator.
+ - Changed the default PNG compression level to 9.
+ - Updated the format of grayscale MIFF files to be compatible with the
+   current version of ImageMagick.
+ - Added -encoding option, to set the character encoding for text output.
+ - Allow -cs to set the output colorspace even when IW doesn't think it's a
+   good idea.
+ - No longer attempting to make the output colorspace be the same as the
+   input colorspace.
+
+Version 0.9.4 - 9 Aug 2011
+ - Added -density option, to give some control over how the density of the
+   target image is calculated.
+ - Added -nowarn and -noinfo options.
+ - Support for reading GIF files.
+
+Version 0.9.3 - 30 May 2011
+ - Support for rational numbers like "1/3" in the command line.
+ - Basic support for Google's WebP file format.
+ - Partial support for ImageMagick's MIFF file format.
+ - Support for image sizes that are relative to the original image size.
+ - Moved strings to string tables.
+
+Version 0.9.2 - 7 Apr 2011
+ - Made the library use only UTF-8 for character encoding.
+ - Improved resampling speed.
+ - Read the background color metadata from PNG files, and use it as the
+   background color in certain circumstances.
+ - Detect input file formats based on the contents of the file, instead of the
+   file name.
+ - Added "sinc" filter.
+ - Support for writing uncompressed TIFF files.
+ - Replaced "-nobinarytrn" option with "-noopt".
+ - Added a "halftone" ordered dither.
+ - Support for reduced input bitdepths; respect PNG sBIT chunks.
+ - The image format modules now use abstracted I/O.
+ - Support for writing BMP files.
+ - Added option to set the PNG compression level.
+ - Improved speed of colorspace conversion.
+
+Version 0.9.1 - 22 Feb 2011
+ - Added a crop feature.
+ - Support for optimizing to an image with binary transparency.
+ - Added "-interlace" option.
+ - Added "-jpegsampling" option.
+ - Retain pixel density information if the image isn't being resized.
+ - Support for optimizing to a 4- or 16-color grayscale image.
+
+Version 0.9.0 - 6 Feb 2011
+ - Initial public release.
+

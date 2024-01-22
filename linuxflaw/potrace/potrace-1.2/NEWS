@@ -1,0 +1,31 @@
+December 23, 2003: Release 1.2
+
+ New experimental Gimppath and XFig backends were added.  A separate
+ program mkbitmap was added, which can be used as a preprocessor to
+ potrace. It turns greyscale or color images into high-quality
+ bitmaps with optional scaling and filtering. New options --opaque,
+ --group, and --fillcolor were added for greater flexibility in
+ generating editable PostScript and SVG output. The bitmap
+ decomposition algorithm was improved and can now take advantage of
+ 64-bit platforms.  Portability and autoconfiguration were vastly
+ improved, and a test suite was added. Runlength encoded BMP files can
+ now be read. Some bugs in command line options were fixed.
+
+August 18, 2003: Release 1.1
+
+ The most important new feature of this release is an SVG (scalable
+ vector graphics) backend. This file format can be read by vector
+ graphics manipulation programs such as sodipodi, as well as web
+ browsers with an SVG plugin. I also added PGM, PPM, and BMP as
+ additional input file formats. The new --blacklevel and --invert
+ options control how non-black-and-white images are converted to
+ bitmaps before being processed by potrace. The implementation of a
+ critical function has been improved to make potrace even faster on
+ large input files; this results in speedups of up to factor 3.3
+ relative to potrace 1.0. Autoconfiguration was improved, and the code
+ was polished to compile on more different architectures. The error
+ messages for wrong file formats were also improved.
+
+August 10, 2003: Release 1.0
+
+ First public release.

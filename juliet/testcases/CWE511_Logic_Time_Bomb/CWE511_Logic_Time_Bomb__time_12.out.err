@@ -1,0 +1,42 @@
+0x415978 18 Calling good()...
+0x415990 16 Finished good()
+0x4159a0 16 Happy New Year!
+0x415a48 4 %s
+
+0x415ad8 20 %
+0x415a50 4 %d
+
+0x415a58 5 %hd
+
+0x415a60 4 %f
+
+0x415a68 5 %ld
+
+0x415a70 5 %zu
+
+0x415a78 6 %02x
+
+0x415a80 5 %ls
+
+0x415a88 4 %u
+
+0x415a90 4 %g
+
+0x415a98 10 %d -- %d
+
+0x415aa8 5 %02x
+0x415ab0 1 
+0x415af0 20 %
+0x415ab8 11 GlobalTrue
+0x415ac8 12 GlobalFalse
+0x415a30 4 
+0x415a38 4 
+0x415a40 4 
+0x619180 4 
+0x619438 4 
+0x619188 4 
+0x619440 4 
+0x619448 8 
+Calling good()...
+Happy New Year!
+Finished good()

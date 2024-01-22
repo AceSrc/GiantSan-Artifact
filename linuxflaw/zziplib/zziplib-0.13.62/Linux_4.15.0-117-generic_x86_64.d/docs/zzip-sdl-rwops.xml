@@ -1,0 +1,95 @@
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+    "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<?xml-stylesheet type="text/css" href="sdocbook.css"   ?>
+<section> <sectioninfo><date> 19. Aug 2001 </date></sectioninfo>
+<title> SDL rwops </title> <subtitle>Example to make an SDL_rwops interface.</subtitle>
+
+<para><phrase role="small"> some <emphasis role="bold">MSVC</emphasis> help in 
+   <ulink url="README.MSVC6">README.MSVC6</ulink> and
+   <ulink url="README.SDL">README.SDL</ulink>
+</phrase></para>
+
+<!--border-->
+
+<section>
+<title> Source </title>
+
+<para>
+ The example sources of the <ulink url="zziplib.html">zziplib library</ulink>
+ are usually put under the <ulink url="COPYING.ZLIB">ZLIB license</ulink> so 
+ that you can reuse the code freely in your own projects. Here we talk
+ about the example that might be most useful for 
+ <ulink url="http://libsdl.org">SDL</ulink> based programs.
+ Just copy the two files 
+ <ulink url="SDL_rwops_zzip.h">SDL_rwops_zzip.h</ulink>
+ and
+ <ulink url="SDL_rwops_zzip.c">SDL_rwops_zzip.c</ulink>
+ to the directory with your other project sources, and make sure
+ to link it somehow to your programs. I did not make the effort to
+ create a seperate library out of it - it would just export one
+ single function <constant>SDL_RWFromZZIP</constant> that has the same call-synopsis
+ like <constant>SDL_RWFromFile</constant> (but it can not (yet) write a zip-file).
+</para>
+
+<para>
+ The source file <ulink url="SDL_rwops_zzip.c">SDL_rwops_zzip.c</ulink> is
+ quite short - it just stores a ZZIP_FILE handle in the userdata
+ field of the <constant>SDL_rwops</constant> structure. The SDL'rwop calls will then
+ fetch that pointer and call the corresponding functions from the
+ <ulink url="zziplib.html">zziplib library</ulink>. Most of the glue code
+ is in the <constant>SDL_RWFromZZIP</constant> function that allocates an 
+ <constant>SDL_rwops</constant> structure and fills the handler-functions 
+ into the callback fields.
+</para>
+
+</section><section>
+<title> Usage </title>
+
+<para>
+ If you link this file to your project, remember that your executables
+ do now have additional dependencies - not only -lzzip to link with
+ the <ulink url="zziplib.html">zziplib library</ulink> - do not forget to
+ link with zlib library via -lz. Of course, there is a lib-config
+ script that you can use: `zzip-config --libs` will return these
+ linker-infos (unless you have a native-windows system - it is 
+ shell-script).
+</para>
+
+<para>
+ As an example, replace that <constant>SDL_RWFromFile</constant> that accesses your
+ game-graphic files - these files are stored in shared/myapp
+ of course where they belong. When you've done that
+ then go to X/share/myapp and 
+<screen role="linebreak">
+</screen><literal>&nbsp;&nbsp;&nbsp;
+ `(cd graphics/ &amp;&amp; zip -9r ../graphics.zip .)` </literal><screen role="linebreak">
+</screen>
+ and rename the graphics/ subfolder - and still all your files
+ are found: a filepath like X/shared/graphics/game/greetings.bmp 
+ will open X/shared/graphics.zip and return the zipped file 
+ game/greetings.bmp in the zip-archive (for reading that is).
+</para>
+
+</section><section>
+<title> Test </title>
+
+<para>
+ The <ulink url="zziplib.html">zziplib</ulink> configure script does not
+ look for <ulink url="http://libsdl.org">SDL</ulink>. If you know that
+ you have <ulink url="http://libsdl.org">SDL</ulink> installed 
+ then you can check this <constant>SDL_rwops</constant> example by using
+ <cmdsynopsis><command>`make testsdl`</command></cmdsynopsis>. This will compile the
+ two source files <ulink url="SDL_rwops_zzip.c">SDL_rwops_zzip.c</ulink>
+ and <ulink url="SDL_rwops_zzcat.c">SDL_rwops_zzcat.c</ulink> to be linked
+ together into an executable called <literal>zzcatsdl</literal>. The test
+ will continue with a <cmdsynopsis><command>`zzcatsdl test/README`</command></cmdsynopsis> 
+ - just like it is done for <cmdsynopsis><command>`make test3`</command></cmdsynopsis>.
+</para>
+<para>
+ The corresponding section in the <ulink url="Makefile.am">Makefile.am</ulink>
+ is also an example how to use lib-config scripts to build files. Here
+ there is no build-processing that had been tweaked much by automake/autoconf.
+ Just use sdl-config and zzip-config to add the needed flags.
+</para>
+</section></section>
+

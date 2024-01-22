@@ -1,0 +1,68 @@
+This package was first debianized by Dr. Guenter Bechly <gbechly@debian.org>.
+Afterwards, it has been maintained by
+  Harry Henry Gebel <hgebel@debian.org>
+  The Debian QA Group
+  Henning Makholm <henning@makholm.net>
+
+The source was downloaded from
+    http://ftp1.sourceforge.net/autotrace/autotrace-0.31.1.tar.gz
+
+The autotrace homepage is at
+    http://autotrace.sourceforge.net/
+
+Upstream Author: Martin Weber <martweb@gmx.net>
+
+License: GPL, some parts LGPL (note that even parts of the shared
+library in libautotrace3 are GPL-licenced rather than LGPL).
+
+On Debian systems, the complete text of the GNU General Public
+Licence can be found in the file /usr/share/common-licenses/GPL,
+and the complete text of the GNU Lesser General Public License
+can be found in the file /usr/share/common-licenses/LGPL.
+
+Copyright notices from the source files follow:
+
+  Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.
+  Copyright (C) 1992 Free Software Foundation, Inc.
+  Copyright (C) 1987, 88, 89, 90, 91, 1992, 1999 Free Software Foundation, Inc.
+  Copyright (C) 1999 Free Software Foundation, Inc.
+  Copyright (C) 2000, 2001 Martin Weber
+  Copyright (C) 2000, 2001, 2002 Martin Weber
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+
+   Copyright (C) 2000 MenTaLguY <mental@rydia.net>
+   Copyright (C) 1999, 2000, 2001 Bernhard Herzog.
+   Copyright (C) 1999, 2000, 2001 Dietmar Kovar
+   Copyright (C) 1999, 2000, 2001 Erik Nygren <nygren@mit.edu>
+   Copyright (C) 1999, 2000, 2001 Ian MacPhedran
+   Copyright (C) 1999, 2000, 2001 Kevin O' Gorman <spidey@maths.tcd.ie>
+   Copyright (C) 1999, 2000, 2001 Martin Weber.
+   Copyright (C) 2000, 2001 Enrico Persiani
+   Copyright (C) 2000-2001 Wolfgang Glunz, Martin Weber 
+   Copyright (C) 2001 David A. Bartold
+   Copyright (C) 2001 Per Grahn
+   Copyright (C) 1999, 2000, 2001, 2002 Bernhard Herzog.
+   Copyright (C) 2001, 2002 Martin Weber
+   Copyright (C) 2002 Andrew Elia
+   Copyright (C) 2002 Masatake YAMATO
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   as published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+

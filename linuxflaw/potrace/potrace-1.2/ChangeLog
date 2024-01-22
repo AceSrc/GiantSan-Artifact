@@ -1,0 +1,122 @@
+ChangeLog
+
+v1.2 2003/12/23
+	(2003/12/23) PS1 - added an xfig backend.
+	(2003/12/23) PS1 - added --group option to group related shapes
+	together in SVG backend.
+	(2003/12/23) PS1 - added --opaque option to paint white shapes
+	opaquely, instead of leaving them transparent, in PS/EPS and SVG
+	backends.
+	(2003/12/23) PS1 - rewrote path decomposition algorithm to
+	calculate path containment tree, to be used for grouping.
+	(2003/12/23) PS1 - test suite: added a check of postscript output
+	using ghostscript.
+	(2003/09/18) PS1 - autoconf: added tests for -lm and -lz
+	libraries, and for zlib.h header file.
+	(2003/09/18) PS1 - portability: cleaned up code so that it can be
+	compiled with a C++ compiler.
+	(2003/09/17) PS1 - code cleanup in main.c:main().
+	(2003/09/17) PS1 - added mkbitmap program.
+	(2003/09/17) PS1 - added -ffloat-store compiler flag for improved
+	floating point predictability.
+	(2003/09/12) PS1 - test suite: added test for BMP runlength
+	encoding.
+	(2003/09/12) PS1 - fixed frontend for BMP runlength encoding.
+	(2003/09/11) PS1 - autoconf: added test to work around gcc
+	compiler bug 12243, which affected curve.c:adjust_vertices().
+	(2003/09/11) PS1 - renamed pbm.c as bitmap.c, pgm.c as greymap.c
+	(2003/09/11) PS1 - moved some bitmap details from path.c to pbm.c
+	(2003/09/10) PS1 - renamed pbm.h macros to start with BM_
+	(2003/09/02) PS1 - portability: added missing fallback value for
+	M_PI to backend_pgm.c.
+	(2003/08/28) PS1 - specialized matrix solving code for n=2.
+	(2003/08/28) PS1 - portability (and scalability): eliminated
+	dynamic arrays.
+	(2003/08/28) PS1 - portability: replaced vsnprintf by vsprintf.
+	(2003/08/28) PS1 - portability: provided fallback value for M_PI
+	(2003/08/27) PS1 - autoconf: now checks whether the compress
+	program works, not just whether it exists.
+	(2003/08/27) PS1 - test suite: wrote three tests for "make check"
+	(2003/08/27) PS1 - portability: fixed some floating point errors
+	on DEC Alpha: division by zero and log of zero.
+	(2003/08/27) PS1 - changed bitmap representation to take advantage
+	of 64-bit architectures.
+	(2003/08/27) PS1 - changed default scaling in ps and eps modes for
+	small page sizes.
+	(2003/08/26) PS1 - allow arguments of command line options -b, -z,
+	-P to be abbreviated by "unambiguous prefix".
+	(2003/08/26) PS1 - added rotation to gimppath backend.
+	(2003/08/24) PS1 - portability: removed GNU extensions from printf
+	format strings in backend_eps.
+	(2003/08/22) PS1 - converted --unit to double value.
+	(2003/08/22) PS1 - added experimental gimppath backend.
+	(2003/08/20) PS1 - close paths in postscript/eps backend.
+	(2003/08/20) PS1 - fixed bug in parsing command line options: long
+	options --cleartext, --level2, --level3 did not work properly.
+	Thanks to George Williams for reporting this bug.
+	
+v1.1 2003/08/18	
+	(2003/08/17) PS1 - replaced calc_lon algorithm by a faster
+	implementation. This results in speedups of up to factor 3.3 for
+	certain large input files.
+	(2003/08/17) PS1 - added --invert option.
+	(2003/08/17) PS1 - improved error messages on wrong file format.
+	(2003/08/17) PS1 - code cleanup to build under fussier compilers.
+	Thanks to Nelson Beebe for submitting compiler logs for a large
+	number of setups.
+	(2003/08/17) PS1 - renamed curve.c:quad as quadform to avoid name
+	clash on IBM AIX, Compaq/DEC ODF/1.
+	(2003/08/17) PS1 - autoconf: let user override CFLAGS at configure
+	time, and use -Wall and -O3 only for gcc compiler
+	(2003/08/16) PS1 - added --blacklevel option to control
+	image-to-bitmap conversion
+	(2003/08/16) PS1 - added ability to read BMP files. Changed error
+	reporting in case of empty files, or if there is junk at the end
+	of a file in multipage mode.
+	(2003/08/14) PS1 - as a convenience, now also read files in PGM
+	and PPM format and convert to bitmap by simple threshold method.
+	This is because many programs, including the Gimp and the *topnm
+	tools, produce PNM output which must be further converted to PBM.
+	(2003/08/14) PS1 - rearranged order of options in usage message.
+	(2003/08/14) PS1 - implemented -d1 option for SVG backend. This
+	outputs a jaggy bitmap with no smoothing.
+	(2003/08/14) PS1 - autoconf: improved handling of
+	--enable-compress
+	(2003/08/14) PS1 - added SVG backend.
+	(2003/08/14) PS1 - renamed old -s option as -S
+	(2003/08/12) PS1 - added README.win
+	(2003/08/12) PS1 - autoconf: fixed bug #787182: added non-standard
+	compile time options to help message for ./configure script
+	
+v1.0 2003/08/10	
+	(2003/08/10) PS1 - added file i/o code
+	(2003/08/08) PS1 - optimized number of times the penalty3 function
+	is called. Speedups of factor 2.7 were observed on large files.
+	(2003/08/08) PS1 - added --opttolerance and --alphamax options.
+	(2003/08/07) PS1 - autoconf: changed configure.in so that test for
+	compress is omitted when the user overrides it - this prevents a
+	wrong cached value to be read.
+	(2003/08/07) PS1 - keep output flushed in postscript mode
+	(2003/08/07) PS1 - fixed memory leak in multiple page mode
+	(2003/08/06) PS1 - replaced --opticurve by --longcurve option;
+	opticurve is now the default
+	(2003/08/06) PS1 - added opticurve sensitivity to pgm backend
+	(2003/08/06) PS1 - restricted opticurves to be bounded away from
+	180 degrees
+	(2003/08/06) PS1 - allow margins and papersize to determine width
+	if it is not defined by other means in postscript mode
+	(2003/08/06) PS1 - added ability to read multiple bitmaps in
+	postscript mode
+	(2003/08/05) PS1 - new --longcoding option
+	(2003/08/05) PS1 - new optimized eps backend which works with
+	opticurve.
+	(2003/07/31) PS1 - replaced O(n^3) calc_lon algorithm by a new
+	O(n^2) algorithm. Observed speedups of factor 80.
+	(2003/07/27) PS1 - added --opticurve option and integrated
+	opticurve code in curve.c
+	(2003/06/04) PS1 - made bm_to_pathlist a lot more efficient by
+	scanning and clearing only bounding box of mask in inner scan.
+	(2002/11/17) PS1 - changed bm_to_pathlist prototype to use
+	explicit return value.
+	(2002/10/09) PS1 - autoconf: added automake/autoconf scripts in
+	preparation for public distribution.

@@ -1,0 +1,24 @@
+/^$/n
+x
+/^$/bS
+x
+/\\$/{H;d;}
+{H;s/.*//;x;}
+bM
+:S
+x
+/\\$/{h;d;}
+{h;s/.*//;x;}
+:M
+s/\(\n\)	/\1 /g
+/^	/d
+/^[ 	]*[\#]/d
+/^VPATH *=/d
+s/^srcdir *=.*/srcdir = ./
+s/^top_srcdir *=.*/top_srcdir = ./
+/[:=]/!d
+/^\./d
+s/:.*/:/
+/:$/s/ /  /g
+/:$/s/  / /g
+/^.*[=]/!s%$% ; (cd $(BUILD) \&\& $(ISNOTSRCDIR) \&\& $(MAKE) "$\@") || exit ; $(MAKE) done "RULE=$\@"%

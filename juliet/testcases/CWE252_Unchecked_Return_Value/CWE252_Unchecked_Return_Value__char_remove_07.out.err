@@ -1,0 +1,46 @@
+0x414858 18 Calling good()...
+0x414870 16 Finished good()
+0x618188 4 
+0x414880 21 Benign, fixed string
+0x414898 17 removemegood.txt
+0x4148b0 15 remove failed!
+0x414958 4 %s
+
+0x4149e0 20 %
+0x414960 4 %d
+
+0x414968 5 %hd
+
+0x414970 4 %f
+
+0x414978 5 %ld
+
+0x414980 5 %zu
+
+0x414988 6 %02x
+
+0x414990 5 %ls
+
+0x414998 4 %u
+
+0x4149a0 4 %g
+
+0x4149a8 10 %d -- %d
+
+0x4149b8 5 %02x
+0x4148a8 1 
+0x4149f8 20 %
+0x4149c0 11 GlobalTrue
+0x4149d0 12 GlobalFalse
+0x414940 4 
+0x414948 4 
+0x414950 4 
+0x618190 4 
+0x618458 4 
+0x618198 4 
+0x618460 4 
+0x618468 8 
+Calling good()...
+remove failed!
+remove failed!
+Finished good()

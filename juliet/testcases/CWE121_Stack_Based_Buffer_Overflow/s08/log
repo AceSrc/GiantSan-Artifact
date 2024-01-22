@@ -1,0 +1,90 @@
+clang++ -O3 -fsanitize=address -DOMITGOOD -I ../../../testcasesupport -DINCLUDEMAIN -o CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72.out CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72b.cpp CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp io.o std_thread.o -lpthread -lm
+ASAN instrumenting:
+_ZN60CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_727badSinkESt6vectorIPcSaIS1_EE
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72b.cpp
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72b.cpp
+FileName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72b.cpp
+EnableStatic: 1
+EnableLoop: 1
+[_ZN60CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_727badSinkESt6vectorIPcSaIS1_EE Finished]
+=== check records === total: 4 reduced: 2 cached: 0 skiped: 0 fastonly: 0
+ASAN instrumenting:
+_ZN60CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_723badEv
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+FileName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+EnableStatic: 1
+EnableLoop: 1
+[_ZN60CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_723badEv Finished]
+=== check records === total: 21 reduced: 10 cached: 0 skiped: 10 fastonly: 0
+ASAN instrumenting:
+main
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+FileName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+EnableStatic: 1
+EnableLoop: 1
+[main Finished]
+=== check records === total: 0 reduced: 0 cached: 0 skiped: 0 fastonly: 0
+ASAN instrumenting:
+_ZNSt6vectorIPcSaIS0_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS0_S2_EEmRKS0_
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+FileName: CWE121_Stack_Based_Buffer_Overflow__placement_new_declare_72a.cpp
+Building Quasi Bound
+Value: i8** %__position.coerce
+ub:   %Quasi_Bound = alloca i64, align 8, !nosanitize !8
+Building Quasi Bound
+Value:   %2 = load i8**, i8*** %_M_finish, align 8, !tbaa !15
+ub:   %Quasi_Bound249 = alloca i64, align 8, !nosanitize !8
+Building Quasi Bound
+Value:   %cond.i = phi i8** [ %14, %_ZNSt16allocator_traitsISaIPcEE8allocateERS1_m.exit.i ], [ null, %_ZNKSt6vectorIPcSaIS0_EE12_M_check_lenEmPKc.exit ]
+ub:   %Quasi_Bound250 = alloca i64, align 8, !nosanitize !8
+EnableStatic: 1
+EnableLoop: 1
+[Quasi Bound Checks]: 
+  Function: _ZNSt6vectorIPcSaIS0_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS0_S2_EEmRKS0_
+      store i8* %4, i8** %__first.addr.05.i.i223, align 8, !tbaa !16 from i8** %__position.coerce
+  quasi bound id:   %Quasi_Bound = alloca i64, align 8, !nosanitize !8
+[Quasi Bound Checks]: 
+  Function: _ZNSt6vectorIPcSaIS0_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS0_S2_EEmRKS0_
+      store i8* %4, i8** %__first.addr.07.i.i.i.i.i213, align 8, !tbaa !16 from   %2 = load i8**, i8*** %_M_finish, align 8, !tbaa !15
+  quasi bound id:   %Quasi_Bound249 = alloca i64, align 8, !nosanitize !8
+[Quasi Bound Checks]: 
+  Function: _ZNSt6vectorIPcSaIS0_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS0_S2_EEmRKS0_
+      store i8* %4, i8** %__first.addr.05.i.i, align 8, !tbaa !16 from i8** %__position.coerce
+  quasi bound id:   %Quasi_Bound = alloca i64, align 8, !nosanitize !8
+[Quasi Bound Checks]: 
+  Function: _ZNSt6vectorIPcSaIS0_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS0_S2_EEmRKS0_
+      store i8* %30, i8** %__first.addr.07.i.i.i.i.i, align 8, !tbaa !16 from   %cond.i = phi i8** [ %29, %_ZNSt16allocator_traitsISaIPcEE8allocateERS1_m.exit.i ], [ null, %_ZNKSt6vectorIPcSaIS0_EE12_M_check_lenEmPKc.exit ]
+  quasi bound id:   %Quasi_Bound250 = alloca i64, align 8, !nosanitize !8
+Watching: 0x5562bcfa4268 0x5562bcc7d5a0
+Testing: i8** %__position.coerce   %Quasi_Bound = alloca i64, align 8, !nosanitize !8
+ InsertPoint:   br label %if.end119
+Insert Bounded Loop Check
+    L:   %60 = ptrtoint i8** %__position.coerce to i64
+Delta:   %61 = sub i64 %quasi_bound_for_check, %60
+Recover: 0
+Watching: 0x5562bcfa5390 0x5562bce33f10
+Testing:   %4 = load i8**, i8*** %_M_finish, align 8, !tbaa !15   %Quasi_Bound249 = alloca i64, align 8, !nosanitize !8
+ InsertPoint:   br label %invoke.cont37
+Insert Bounded Loop Check
+    L:   %26 = ptrtoint i8** %4 to i64
+Delta:   %27 = sub i64 %quasi_bound_for_check251, %26
+Recover: 0
+Watching: 0x5562bcfa4268 0x5562bcc7d5a0
+Testing: i8** %__position.coerce   %Quasi_Bound = alloca i64, align 8, !nosanitize !8
+ InsertPoint:   br label %if.end119
+Insert Bounded Loop Check
+    L:   %104 = ptrtoint i8** %__position.coerce to i64
+Delta:   %105 = sub i64 %quasi_bound_for_check253, %104
+Recover: 0
+Watching: 0x5562bcfe70a8 0x5562bcfe31f0
+Testing:   %cond.i = phi i8** [ %60, %_ZNSt16allocator_traitsISaIPcEE8allocateERS1_m.exit.i ], [ null, %_ZNKSt6vectorIPcSaIS0_EE12_M_check_lenEmPKc.exit ]   %Quasi_Bound250 = alloca i64, align 8, !nosanitize !8
+ InsertPoint:   %69 = load i8**, i8*** %_M_start.i27.i, align 8, !tbaa !20
+Insert Bounded Loop Check
+    L:   %69 = ptrtoint i8** %cond.i to i64
+Delta:   %70 = sub i64 %quasi_bound_for_check255, %69
+Recover: 0
+[_ZNSt6vectorIPcSaIS0_EE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPS0_S2_EEmRKS0_ Finished]
+=== check records === total: 18 reduced: 4 cached: 4 skiped: 7 fastonly: 0

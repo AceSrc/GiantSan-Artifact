@@ -1,0 +1,71 @@
+
+	   POTRACE - transform bitmaps into vector graphics
+
+			  README for Windows
+  _________________________________________________________________
+
+This file contains instructions specific to the pre-compiled Windows
+distribution of potrace. Please see the general README file and the
+man page for general information on usage, how to compile potrace,
+etc.
+
+
+INSTALLATION for Windows 95/98/2000/NT/XP/whatever:
+===================================================
+
+Download the file potrace-XXX.cygwin-i386.zip, and unpack it with
+
+        unzip potrace-XXX.cygwin-i386.zip
+
+If the "unzip" program is unavailable, then use "pkunzip" instead, but
+read the following note first.
+
+NOTE: "pkunzip" is a relatively dumb program. My version of it, which
+came with Windows 98, does not understand long filenames, and you may
+have to type something of the form "pkunzip potrace~1.zip". Instead of
+creating a directory, it may decide to dump the files in the current
+working directory, and it may rename them. Use "unzip" instead of
+"pkunzip" if it is available.
+
+If you have "tar" and "gunzip" installed, you may also get the file
+potrace-XXX.cygwin-i386.tar.gz instead of the zip file.
+
+The windows distribution includes an executable file potrace.exe, and
+a dynamically linked library cygwin1.dll.  You need to put the files
+potrace.exe, mkbitmap.exe, and cygwin1.dll in places where Windows can
+find them. One such place is C:\WINDOWS. Alternatively, you can amend
+your PATH environment variable, by adding something like the following
+line to C:\AUTOEXEC.BAT:
+
+        PATH=%PATH%;C:\DIRECTORY\WHERE\FILES\ARE
+
+If you already have a different version of cygwin installed, you
+cannot use this binary unless you up/downgrade to the version of
+cygwin that comes with the potrace distribution. However, there should be
+no problem re-compiling potrace under your version of cygwin.
+
+
+RUNNING:
+========
+
+For non-Windows specific usage information, see the file README.
+
+Potrace on Windows runs in much the same way as under Linux and other
+Unix-like operating systems, due to the amazing magic of cygwin
+(http://sources.redhat.com/cygwin/), which simulates a unix
+environment under Windows.
+
+Note on wildcards: The following command line does not work as
+expected under Windows:
+
+ potrace h:\data\*.*
+
+However, each of the following two commands will work as it should:
+
+ potrace h:\data\file.txt
+
+ potrace h:/data/*.*
+
+I am not sure what causes this behavior. It is apparently an
+inconsistency between backslash conversion and wildcard expansion.
+

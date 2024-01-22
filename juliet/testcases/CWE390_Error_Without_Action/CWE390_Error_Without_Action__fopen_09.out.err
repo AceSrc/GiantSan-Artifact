@@ -1,0 +1,44 @@
+0x4148e8 18 Calling good()...
+0x414900 16 Finished good()
+0x414910 21 Benign, fixed string
+0x414928 9 file.txt
+0x414938 3 w+
+0x414940 15 fopen() failed
+0x4149e8 4 %s
+
+0x414a70 20 %
+0x4149f0 4 %d
+
+0x4149f8 5 %hd
+
+0x414a00 4 %f
+
+0x414a08 5 %ld
+
+0x414a10 5 %zu
+
+0x414a18 6 %02x
+
+0x414a20 5 %ls
+
+0x414a28 4 %u
+
+0x414a30 4 %g
+
+0x414a38 10 %d -- %d
+
+0x414a48 5 %02x
+0x414930 1 
+0x414a88 20 %
+0x414a50 11 GlobalTrue
+0x414a60 12 GlobalFalse
+0x4149d0 4 
+0x4149d8 4 
+0x4149e0 4 
+0x618190 4 
+0x618458 4 
+0x618198 4 
+0x618460 4 
+0x618468 8 
+Calling good()...
+Finished good()

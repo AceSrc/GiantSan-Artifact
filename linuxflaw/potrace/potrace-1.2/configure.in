@@ -1,0 +1,142 @@
+dnl Copyright (C) 2001-2003 Peter Selinger.
+dnl This file is part of potrace. It is free software and it is covered
+dnl by the GNU general public license. See the file COPYING for details.
+
+dnl Process this file with autoconf to produce a configure script.
+
+dnl ----------------------------------------------------------------------
+dnl Package info
+AC_INIT(src/curve.c)
+AM_INIT_AUTOMAKE(potrace, 1.2)
+DATE="December 2003"
+AM_CONFIG_HEADER(config.h)
+
+dnl ----------------------------------------------------------------------
+dnl The names of the installed executables are in
+dnl principle configurable. However, they should not normally be changed,
+dnl because other scripts might depend on them.
+
+POTRACE=potrace
+AC_DEFINE_UNQUOTED(POTRACE,"$POTRACE",Name of the potrace binary)
+
+MKBITMAP=mkbitmap
+AC_DEFINE_UNQUOTED(MKBITMAP,"$MKBITMAP",Name of the mkbitmap binary)
+
+dnl ----------------------------------------------------------------------
+dnl figure out compiler options
+
+dnl remember user's CFLAGS, if any
+iCFLAGS="$CFLAGS"
+
+dnl Check for compiler
+AC_PROG_CC
+
+dnl If compiler is gcc, use our own CFLAGS unless user overrides them
+if test "$GCC" = "yes" && test "$iCFLAGS" = ""; then
+  CFLAGS="-g -O3 -Wall -ffloat-store"
+fi
+
+dnl ----------------------------------------------------------------------
+dnl check for compiler bugs. 
+
+dnl The GCC compiler has a loop optimization bug which affects potrace.
+dnl Since the bug is currently pending (as of gcc version 3.3.1), we
+dnl simply assume that all gcc compilers have this bug. Once the bug is
+dnl fixed, we will add a test which checks the compiler version.
+
+if test "$GCC" = "yes"; then 
+  AC_MSG_CHECKING([whether gcc has bug number 12243])
+  AC_DEFINE(HAVE_GCC_LOOP_BUG,, [does the C compiler have gcc bug 12243?])
+  AC_MSG_RESULT(yes)
+fi
+
+dnl ----------------------------------------------------------------------
+dnl new macro: POTRACE_PROG_COMPRESS_WORKS (VARIABLE):
+dnl check whether the compress program works
+
+AC_DEFUN(POTRACE_PROG_COMPRESS_WORKS,
+[
+  AC_CACHE_CHECK([whether the compress program works],
+  potrace_cv_prog_compress_works, [
+  set dummy `echo ABC | compress | wc`
+  if test "${4}" -eq 8 ; then
+    potrace_cv_prog_compress_works=yes
+  else
+    potrace_cv_prog_compress_works=no
+  fi
+  ])
+  $1=$potrace_cv_prog_compress_works
+])
+
+dnl ----------------------------------------------------------------------
+dnl check for features
+
+AC_ARG_ENABLE(compress,
+[  --enable-compress       enable PostScript level 2 compression via the
+			  external 'compress' program
+  --disable-compress      disable PostScript level 2 compression],
+ ,
+ [
+  AC_CHECK_PROG(prog_compress, compress, yes)
+  if test "$prog_compress" = "yes"; then
+    POTRACE_PROG_COMPRESS_WORKS(enable_compress)
+  fi
+ ])
+if test "$enable_compress" = yes; then
+  AC_DEFINE(HAVE_COMPRESS,, is the 'compress' program available?)
+fi
+
+dnl Enable optional features
+AC_ARG_ENABLE(metric, 
+[  --enable-metric         use metric units (centimeters) as default])
+if test "$enable_metric" = yes; then
+   AC_DEFINE(USE_METRIC,, do we use metric units by default?)
+fi
+
+AC_ARG_ENABLE(a4, 
+[  --enable-a4             use a4 as the default papersize])
+if test "$enable_a4" = yes; then
+   AC_DEFINE(USE_A4,, do we use a4 papersize by default?)
+fi
+
+dnl ----------------------------------------------------------------------
+dnl Check for libraries
+AC_CHECK_LIB(z, deflate, true, AC_MSG_ERROR([cannot find the z library (-lz)]))
+AC_CHECK_LIB(m, floor, true, AC_MSG_ERROR([cannot find the m library (-lm)]))
+
+dnl ----------------------------------------------------------------------
+dnl Check for library functions.
+AC_CHECK_FUNC(getopt_long, , EXTRA_OBJS="$EXTRA_OBJS getopt.o getopt1.o")
+
+dnl ----------------------------------------------------------------------
+dnl Check for header files
+AC_CHECK_HEADER(zlib.h, true, [AC_MSG_ERROR([cannot find zlib.h])])
+
+dnl ----------------------------------------------------------------------
+dnl Check whether we have i386 features
+dnl AC_MSG_CHECKING([for Intel 386])
+dnl AC_TRY_COMPILE(,
+dnl 	int x;
+dnl	asm("bsf %1,%0\njnz 0f\nmovl $32,%0\n0:":"=r"(x):"r"(x));
+dnl	return x; /* need this so that -O2 does not optimize the asm away */
+dnl , AC_MSG_RESULT(yes) 
+dnl  AC_DEFINE(HAVE_I386,, can we use Intel 386 optimizations?)
+dnl , AC_MSG_RESULT(no))	
+dnl AC_DEFINE_UNQUOTED(HAVE_I386,"$HAVE_I386",Are we on an Intel 386 or better?)
+
+dnl ----------------------------------------------------------------------
+dnl Set up substitutions of non-standard configuration parameters
+AC_SUBST(DATE)
+AC_SUBST(POTRACE)
+AC_SUBST(MKBITMAP)
+AC_SUBST(EXTRA_OBJS)
+AC_SUBST(INCLUDES)
+
+dnl ----------------------------------------------------------------------
+AC_OUTPUT([Makefile 
+	   src/Makefile 
+	   doc/Makefile
+	   check/Makefile
+	   doc/potrace.1
+	   doc/mkbitmap.1
+          ])

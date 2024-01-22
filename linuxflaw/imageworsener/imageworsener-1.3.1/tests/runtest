@@ -1,0 +1,330 @@
+#!/bin/bash
+
+# Quick & dirty ImageWorsener regression testing.
+
+# Optional first parameter is the "imagew" binary to test.
+
+# It is normal for some warnings to be displayed when running the tests.
+
+# This testing system is not implemented very well. There are many reasons
+# you could get "failures" even when there is nothing wrong.
+# For example:
+#  - Using a different version of libjpeg, libpng, or zlib.
+#  - Subtle differences in math libraries.
+#  - Subtle differences and indeterminacies in how compilers handle floating
+#    point calculations
+#    (see also http://gcc.gnu.org/bugzilla/show_bug.cgi?id=323).
+#
+# Consider using the "compare" utility from ImageMagick to determine how
+# many pixels are actually different.
+# 
+# (Unfortunately, we can't always test *just* the pixels values, because
+# some of the meta data in the image files is important.)
+
+IW="$1"
+CMP=cmp
+
+
+if [ "$IW" = "" ]
+then
+ # Search for the IW executable.
+ for x in ../imagew ../Release64/imagew.exe ../Debug64/imagew.exe \
+  ../Release/imagew.exe ../Debug/imagew.exe ../imagew.exe
+ do
+  if [ -x "$x" ]
+  then
+   IW="$x"
+   break
+  fi
+ done
+
+ if [ "$IW" = "" ]
+ then
+  echo "Can't find the imagew executable."
+  exit 1
+ fi
+
+ echo "Testing $IW"
+fi
+
+
+SCALE="-width 35 -height 35"
+SCALE2="-width 24 -height 24"
+SMALL="-width 15 -height 15"
+CMPR="-zipcmprlevel 9"
+DCMPR="-zipcmprlevel -1"
+
+if [ ! -d actual ]
+then
+	mkdir actual
+fi
+
+rm -f actual/*.png actual/*.jpg actual/*.bmp actual/*.tif actual/*.miff actual/*.webp
+
+echo "Creating images..."
+
+# PNG reading tests.
+for f in g1 g2 g4 g8 \
+ p1 p1t p2 p2t p4 p4t p8 p8t \
+ rgb8 g8a rgb8a
+do
+ $IW srcimg/$f.png actual/png-$f.png $DCMPR -width 35 -height 35 -filter catrom
+done
+for f in g16 rgb16 g16a rgb16a
+do
+ $IW srcimg/$f.png actual/png-$f.png $DCMPR -width 35 -height 35 -filter catrom -depth 16
+done
+
+# Images for which binary transparency can be retained.
+for f in g1t g2t g4t g8t rgb8t
+do
+ $IW srcimg/$f.png actual/png-${f}ns.png $DCMPR
+done
+for f in g16t rgb16t
+do
+ $IW srcimg/$f.png actual/png-${f}ns.png -depth 16 $DCMPR
+done
+
+# Test some grayscale optimizations. 
+$IW srcimg/g8.png actual/ccgray-4.png $DCMPR $SMALL -filter bspline -cc 4 -dither o
+$IW srcimg/g8.png actual/ccgray-16.png $DCMPR $SMALL -filter bspline -cc 16 -dither o
+$IW srcimg/g8.png actual/ccgray-17.png $DCMPR $SMALL -filter bspline -cc 17 -dither o
+$IW srcimg/g8a.png actual/ccgraya-4.png $DCMPR $SMALL -filter bspline -cc 4 -dither o
+
+# Test the decision between 4-bpp palette and 8-bpp grayscale.
+$IW srcimg/rgb8.png actual/ccgray-10.png $DCMPR $SMALL -filter gaussian -cc 10 -dither o -grayscale
+
+$IW srcimg/g4.png actual/condgray.png $DCMPR $SMALL -filter mitchell -cc 7 -ccgray 6 -ccred 5 -condgrayscale
+
+$IW srcimg/g2t.png actual/bkgd.png $CMPR -width 35 -height 35 -filter catrom -bkgd e42
+$IW srcimg/rgb8a.png actual/bkgd2.png $CMPR -width 35 -height 35 -filter catrom -bkgd e42,0f5 -checkersize 6 -checkerorigin 1,3
+$IW srcimg/rgb8a.png actual/bkgd3.png $CMPR -width 35 -height 35 -filter catrom -bkgd e42d,00ff5550 -checkersize 5 -checkerorigin 2,5 -edge t -translate 4,3
+
+# Solid color gray image with transparency
+$IW srcimg/bt-gray.png actual/bt-g1.png $CMPR -width 35 -height 35 -filter lanczos
+$IW srcimg/bt-white.png actual/bt-w1.png $CMPR -width 35 -height 35 -filter lanczos
+$IW srcimg/g1t.png actual/bt-b1.png $CMPR -width 35 -height 35 -filter lanczos
+$IW srcimg/bt-gray.png actual/bt-g2.png $CMPR -width 35 -height 35 -filter lanczos -bkgd 111
+# Apply a background to images we just created.
+$IW actual/bt-b1.png actual/bt-b1a.png $CMPR -bkgd 000000
+$IW actual/bt-g1.png actual/bt-g1a.png $CMPR -bkgd 808080
+$IW actual/bt-w1.png actual/bt-w1a.png $CMPR -bkgd ffffff
+
+# test downscaling
+for f in auto mix triangle gaussian lanczos
+do
+ $IW srcimg/rings1.png "actual/ds-$f.png" $DCMPR -width 35 -height 35 -filter "$f"
+done
+
+# test naive linear interpolation
+$IW srcimg/rings1.png actual/ds-linearinterp.png $CMPR -w 35 -h 35 -filter triangle -blur x1
+
+# Special test for box filter.
+# A source image with odd dimensions is best.
+$IW srcimg/rgb8.png actual/ds-box.png $CMPR -w 20 -h 20 -filter box -translate 0.0000001,0 -quiet
+$IW srcimg/rgb8.png actual/ds-boxavg.png -w 20 -h 20 -filter boxavg
+
+# Special test for nearest neighbor.
+# A source image with even dimensions is best
+$IW srcimg/4x4.png actual/ds-nearest.png $CMPR -w 2 -h 2 -filter nearest -translate 0.0000001,0 -quiet
+
+$IW srcimg/4x4.png actual/cc-2.png $DCMPR $SCALE -filter catrom -cc 2
+$IW srcimg/4x4.png actual/cc-6.png $DCMPR $SCALE -filter catrom -cc 6
+$IW srcimg/4x4.png actual/cc-mixed.png $DCMPR $SCALE -filter catrom -cc 3,10,5
+$IW srcimg/4x4.png actual/depth-16.png $DCMPR $SCALE -filter catrom -depth 16
+
+#test upscaling
+for f in auto nearest mix box triangle quadratic gaussian hermite \
+ catrom mitchell bspline lanczos2 lanczos lanczos8 blackman hanning
+do
+ $IW srcimg/4x4.png "actual/us-$f.png" $DCMPR $SCALE -filter "$f"
+done
+$IW srcimg/4x4.png "actual/us-cubic01.png" $DCMPR $SCALE -filter "cubic0,1" -interlace
+
+$IW srcimg/4x4.png actual/us-mixed.png $DCMPR $SCALE -filterx catrom -filtery nearest
+$IW srcimg/4x4.png actual/blur.png $DCMPR $SCALE -filter catrom -blur 1.5
+$IW srcimg/4x4.png actual/edge-s.png $DCMPR $SCALE -filter lanczos -edge s
+$IW srcimg/4x4.png actual/edge-r.png $DCMPR $SCALE -filter lanczos -edge r
+# Test transparent virtual pixels, with an opaque source image. And test per-
+# dimension edge policy.
+$IW srcimg/4x4.png actual/edge-t.png $CMPR $SCALE -filter mitchell -edgex t -edgey r
+# Test transparent virtual pixels, with a source image with transparency.
+# And test translating by a number of source pixels.
+$IW srcimg/p8t.png actual/edge-t2.png $CMPR $SMALL -filter hanning -edge t -translate s3,3
+# Misc. tests
+$IW srcimg/rgb8.png actual/edge-t3.png $CMPR $SMALL -filter lanczos5 -edge t -translate -4,-3 -grayscale -bkgd 876,554433 -checkersize 3
+$IW srcimg/rgb8.png actual/edge-t4.png $CMPR $SMALL -filter cubic0,2.2 -edge t -translate 3,4 -offsetrb .3 -bkgd 965
+
+$IW srcimg/4x4.png actual/cs-linear.png $DCMPR $SCALE -filter catrom -cs linear
+$IW srcimg/4x4.png actual/cs-gamma15.png $DCMPR -height x8.75 -filter catrom -cs gamma1.5
+$IW srcimg/4x4.png actual/cs-srgbs.png $DCMPR -width x8.75 -filter catrom -cs srgbs
+
+$IW srcimg/4x4.png actual/nocslabel.png $DCMPR $SCALE -filter catrom -nocslabel
+$IW srcimg/4x4.png actual/inputcs.png $DCMPR $SCALE -filter catrom -inputcs linear -cs srgb
+
+$IW srcimg/4x4.png actual/nogamma.png $DCMPR $SCALE -filter catrom -nogamma
+$IW srcimg/4x4.png actual/intclamp.png $DCMPR $SCALE -filter lanczos -intclamp
+
+$IW srcimg/4x4.png actual/grayscale.png $DCMPR $SCALE -filter catrom -grayscale
+$IW srcimg/4x4.png actual/grayscale-c.png $DCMPR $SCALE -filter catrom -nogamma -grayscaleformula c
+$IW srcimg/4x4.png actual/grayscale-w.png $CMPR $SCALE -filter quadratic -gsf w3,7,1
+$IW srcimg/4x4.png actual/grayscale-v.png $CMPR $SCALE -blur 1 -gsf v.4,.1,.4 -grayscale -nowarn
+
+$IW srcimg/4x4.png actual/offset.png $DCMPR $SCALE -filter mix -offsetred .333 -offsetgreen -0.2 -offsetblue -1.5 -edge r
+$IW srcimg/rgb8a.png actual/offsetv.png $DCMPR $SCALE -filter mix -offsetvred .333 -offsetvgreen -0.2 -offsetvblue -1.5 -edge r -nowarn
+$IW srcimg/g2.png actual/offsetrb.png $DCMPR $SCALE -filter catrom -offsetrb .333 -offsetvrb -0.6 -edge r
+
+for d in f o halftone sierra sierra2 sierralite jjn burkes atkinson r r2
+do
+ $IW srcimg/4x4.png actual/dither-$d.png $DCMPR $SCALE -filter catrom -cc 3 -dither $d
+done
+
+$IW srcimg/4x4.png actual/dither-gray.png $DCMPR $SCALE -filter catrom -cc 2 -grayscale -dither f
+
+# test -imagesize
+$IW srcimg/p8t.png actual/imgsize1.png $CMPR -S 35,35 -translate 5.2,5.9 -imagesize 24,25.5 -edge t -bkgd 987,654 -filter lanczos4
+
+# test reading/writing JPEG
+
+$IW srcimg/rgb8.jpg actual/jpeg.jpg $SCALE -filter catrom -jpegarith
+$IW srcimg/rgb8.jpg actual/jpegsf.jpg $SCALE -filter catrom -jpegsampling 1,1
+$IW srcimg/g8.jpg actual/jpeggray.jpg $SCALE -filter catrom -jpegquality 60
+$IW srcimg/p4t.png actual/jpegt.jpg $SCALE -filter catrom -interlace -nowarn
+
+# Test writing BMP
+$IW srcimg/g2.png actual/bmp1.bmp -width 11 -filter mix
+$IW srcimg/rgb8.png actual/bmp2.bmp $SCALE -cc 6 -dither f -compress rle
+$IW srcimg/rgb8.png actual/bmp3.bmp $SCALE -cc 2 -ccgreen 4 -dither o -compress rle
+$IW srcimg/rgb16.png actual/bmp4.bmp $SMALL -depth 3,4,6 -dither o
+$IW srcimg/rgb16.png actual/bmp5.bmp $SMALL -depth 5 -grayscale
+
+$IW srcimg/rgb16.png actual/bmp6.bmp $SMALL -depth 11,11,10
+$IW srcimg/rgb8a.png actual/bmp7.bmp $SMALL -opt bmp:version=5
+$IW srcimg/rgb8a.png actual/bmp8.bmp $SMALL -bmpversion 5 -depth 4,4,4,4 -dither o
+$IW srcimg/rgb8a.png actual/bmp9.bmp $SMALL -bmptrns -cc 6,7,6,2 -dither f -bkgdlabel 38e
+
+# Test writing TIFF
+$IW srcimg/g4.png actual/tiff1.tif -width 11 -cc 16 -grayscale -filter mix
+
+# Test writing MIFF
+$IW srcimg/g8a.png actual/miff32.miff -width 11 -depth 32 -filter mix -compress none
+$IW srcimg/rgb16.png actual/miff64.miff -width 11 -depth 64 -filter mix -compress none
+$IW srcimg/rgb8.png actual/miff3.miff -width 13 -depth 32 -intent r
+
+# Test writing WebP
+$IW srcimg/rgb16.png actual/webp1.webp -width 23 -filter mix
+$IW srcimg/g8.png actual/webp2.webp -width 24 -grayscale -filter mix
+
+# Test writing PNM / PAM
+$IW srcimg/rgb8.png actual/pnm1.ppm -cs rec709 -width 19 -filter lanczos2
+$IW srcimg/rgb8.png actual/pnm2.pnm -cs rec709 -width 19 -filter hann -grayscale
+$IW srcimg/rgb8.png actual/pnm3.ppm -cs rec709 -width 21 -filter lanczos2 -depth 5 -dither o
+$IW srcimg/rgb8.png actual/pnm4.pnm -width 20 -grayscale -cc 2 -dither o
+$IW srcimg/rgb8a.png actual/pam1.pam -width 20
+$IW srcimg/rgb8a.png actual/pam2.pam -width 20 -grayscale -depthcc 16 -dither o
+$IW srcimg/rgb8.png actual/pam3.pam -width 20 -grayscale -cc 2 -dither o
+
+# Extra pixel density tests
+$IW srcimg/rgb8x1.png actual/dens-1.png $CMPR $SCALE -filter mix -cs rec709
+$IW srcimg/rgb8x2.png actual/dens-2.png $DCMPR $SCALE -filter mix
+$IW srcimg/rgb8x1.png actual/dens-1ns.png $DCMPR -noresize
+$IW srcimg/rgb8x2.png actual/dens-2ns.png $DCMPR -noresize
+$IW srcimg/p4.png actual/dens-3ns.png $DCMPR
+$IW srcimg/p4.png actual/dens-3ns.jpg
+
+$IW srcimg/g8d.png actual/dens-auto.png $CMPR -density auto
+$IW srcimg/g8d.png actual/dens-none.png $CMPR -density none
+$IW srcimg/g8d.png actual/dens-keep.png $CMPR -width 11 -density keep -filter mix
+$IW srcimg/g8d.png actual/dens-adjust.png $CMPR -width 11 -density adjust -filter mix
+
+$IW srcimg/rgb8x2.png actual/dens-4ns.png -h 27
+$IW srcimg/rgb8x2.png actual/dens-5ns.png -h x1.1 -density adjust
+$IW srcimg/rgb8x2.png actual/dens-6ns.png
+
+$IW srcimg/25x20.png actual/dens-ix.png -w 34 -density adjust
+$IW srcimg/25x20.png actual/dens-iy.png -h 27 -density adjust
+$IW srcimg/25x20.png actual/dens-ixy.png -w 34 -h 27 -density adjust
+$IW srcimg/25x20.png actual/dens-imgsize.png -S 34,34 -translate 1,2.5 -imagesize 31,25 -edge t -bkgd 808b -density adjust
+$IW srcimg/25x20.png actual/orient1.png -reorient transverse
+
+# Image with just 2 pixels can't have more than 2 colors. Test to see
+# if we optimize to a 1bpp palette (etc.).
+$IW srcimg/rgb8a.png actual/opt-02col.png $DCMPR -width 2 -height 1 -filter mix
+$IW srcimg/rgb8a.png actual/opt-04col.png $DCMPR -width 2 -height 2 -filter mix
+$IW srcimg/rgb8.png actual/opt-12col.png $DCMPR -width 4 -height 3 -filter mix
+$IW srcimg/rgb8a.png actual/opt-20col.png $DCMPR -width 5 -height 4 -filter mix
+
+$IW srcimg/p8t.png actual/crop-1.png $DCMPR -width 20 -crop 3,12,18,9
+
+# Test input sBIT support, and deflate:cmprlevel
+$IW srcimg/rgb8a-sbit.png actual/sbit1.png -opt deflate:cmprlevel=3
+$IW srcimg/p8-sbit.png actual/sbit2.png $CMPR
+
+# Test sBIT writing
+$IW srcimg/rgb8a.png actual/sbitw.png $SCALE2 -depth 6,8,5,7 
+
+# Test -noopt
+$IW srcimg/g8a.png actual/noopt-g.png $CMPR -width 15 -noopt grayscale -filter mix
+$IW srcimg/rgb8.png actual/noopt-p.png $CMPR -width 15 -noopt palette -filter mix
+$IW srcimg/p4t.png actual/noopt-sa.png $CMPR -crop 0,0,6,6 -width 15 -noopt stripalpha
+$IW srcimg/g8a.png actual/noopt-bt.png $CMPR -ccalpha 2 -dither f -width 15 -noopt binarytrns -filter mix
+$IW srcimg/g8.png actual/noopt-r8.png $CMPR -depth 16 -crop 17,18,-1 -noopt reduceto8
+
+# Test background color reading
+$IW srcimg/p8tbg.png actual/rbkgd1.png $CMPR -bkgd 080,008 -checkersize 2
+$IW srcimg/p8tbg.png actual/rbkgd2.png $CMPR -bkgd 080,008 -checkersize 2 -usebkgdlabel
+$IW srcimg/p8tbg.png actual/rbkgd3.jpg $CMPR -nowarn
+$IW srcimg/p5t.gif actual/gif1.png $CMPR
+
+# Test background color labeling
+$IW srcimg/rgb8.png actual/bkgdlabel1.png $CMPR -width 15 -noopt palette -bkgdlabel 2380ff
+$IW srcimg/rgb8abg.png actual/bkgdlabel2.png $CMPR -width 15 -noopt palette
+$IW srcimg/rgb8abg.png actual/bkgdlabel3.png $CMPR -width 15 -noopt palette -bkgd ccdd00
+$IW srcimg/p8tbg.png actual/bkgdlabel4.png $CMPR -width 15 -noopt palette
+$IW srcimg/rgb8.png actual/bkgdlabel5.png $CMPR -depth 16 -bkgdlabel 30398707ddd5
+$IW srcimg/rgb8.png actual/bkgdlabel6.png $CMPR -depth 16 -bkgdlabel 30308787dddd
+$IW srcimg/rgb8.png actual/bkgdlabel7.png $CMPR -width 15 -bkgdlabel 3e4 -grayscale
+$IW srcimg/g4t.png actual/bkgdlabel8.png $CMPR -bkgdlabel 444
+$IW srcimg/g4t.png actual/bkgdlabel9.png $CMPR -bkgdlabel 454545
+$IW srcimg/256col.png actual/bkgdlabel10.png $CMPR
+$IW srcimg/256col.png actual/bkgdlabel11.png $CMPR -nobkgdlabel
+$IW srcimg/256col.png actual/bkgdlabel12.png $CMPR -grayscale -cc 2 -dither f
+
+$IW srcimg/rgb8a.png actual/neg1.png $SMALL $CMPR -negate
+
+# More GIF tests
+
+# Page 2 has a local color table.
+$IW srcimg/ani1.gif actual/gif2.png $CMPR -page 2
+
+# Page 4 has no transparency. This tests:
+# - to make sure page 2's color table doesn't get used
+# - to make sure page 3's transparency flag got unset
+# - the -noincludescreen option
+$IW srcimg/ani1.gif actual/gif3.png $CMPR -page 4 -noincludescreen -nobkgdlabel
+
+# Tests for reading BMP files.
+$IW srcimg/bmp24.bmp actual/bmp24.png $CMPR $SMALL
+$IW srcimg/bmpp4.bmp actual/bmpp4.png $CMPR $SMALL
+$IW srcimg/bmprle8t.bmp actual/bmprle8t.png $CMPR $SMALL
+$IW srcimg/bmp32-x.bmp actual/bmp32-x.png $CMPR $SMALL
+$IW srcimg/bmp16-555.bmp actual/bmp16-1.png $CMPR $SCALE -density keep -reorient rotate90
+$IW srcimg/bmp16-565.bmp actual/bmp16-2.png $CMPR $SCALE -density adjust -reorient flipv
+
+$IW srcimg/test1.webp actual/webp3.png $CMPR $SMALL -precision 32
+
+$IW srcimg/g8.pgm actual/pgm1.png $CMPR $SMALL
+
+# Compare the expected and actual files.
+# (TODO: Need a better way to do this.)
+
+echo "Checking images..."
+
+diff -r --brief expected actual
+RET="$?"
+
+if [ $RET -eq 0 ]
+then
+	echo "All tests passed."
+fi
+

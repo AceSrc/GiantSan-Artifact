@@ -1,0 +1,45 @@
+0x415aa8 18 Calling good()...
+0x415ac0 16 Finished good()
+0x415b00 16 /tmp/fileXXXXXX
+0x415ad0 45 Temporary file was opened...now closing file
+0x415b00 16 /tmp/fileXXXXXX
+0x415ba8 4 %s
+
+0x415c38 20 %
+0x415bb0 4 %d
+
+0x415bb8 5 %hd
+
+0x415bc0 4 %f
+
+0x415bc8 5 %ld
+
+0x415bd0 5 %zu
+
+0x415bd8 6 %02x
+
+0x415be0 5 %ls
+
+0x415be8 4 %u
+
+0x415bf0 4 %g
+
+0x415bf8 10 %d -- %d
+
+0x415c08 5 %02x
+0x415c10 1 
+0x415c50 20 %
+0x415c18 11 GlobalTrue
+0x415c28 12 GlobalFalse
+0x415b90 4 
+0x415b98 4 
+0x415ba0 4 
+0x619190 4 
+0x619458 4 
+0x619198 4 
+0x619460 4 
+0x619468 8 
+Calling good()...
+/tmp/fileu0AlqC
+Temporary file was opened...now closing file
+Finished good()

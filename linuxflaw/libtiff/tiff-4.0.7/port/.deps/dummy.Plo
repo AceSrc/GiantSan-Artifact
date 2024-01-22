@@ -1,0 +1,5 @@
+dummy.lo: \
+  /home/acesrc/llvm-giant/lib/clang/12.0.1/share/asan_blacklist.txt \
+  dummy.c
+
+/home/acesrc/llvm-giant/lib/clang/12.0.1/share/asan_blacklist.txt:

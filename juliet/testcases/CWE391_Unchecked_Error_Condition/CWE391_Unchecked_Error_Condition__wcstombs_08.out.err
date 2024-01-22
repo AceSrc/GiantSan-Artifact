@@ -1,0 +1,43 @@
+0x4159a8 18 Calling good()...
+0x4159c0 16 Finished good()
+0x4159d0 21 Benign, fixed string
+0x415a00 8 ÿÿ
+0x4159e8 18 wcstombs() failed
+0x415aa0 4 %s
+
+0x415b30 20 %
+0x415aa8 4 %d
+
+0x415ab0 5 %hd
+
+0x415ab8 4 %f
+
+0x415ac0 5 %ld
+
+0x415ac8 5 %zu
+
+0x415ad0 6 %02x
+
+0x415ad8 5 %ls
+
+0x415ae0 4 %u
+
+0x415ae8 4 %g
+
+0x415af0 10 %d -- %d
+
+0x415b00 5 %02x
+0x415b08 1 
+0x415b48 20 %
+0x415b10 11 GlobalTrue
+0x415b20 12 GlobalFalse
+0x415a88 4 
+0x415a90 4 
+0x415a98 4 
+0x619190 4 
+0x619458 4 
+0x619198 4 
+0x619460 4 
+0x619468 8 
+Calling good()...
+wcstombs() failed

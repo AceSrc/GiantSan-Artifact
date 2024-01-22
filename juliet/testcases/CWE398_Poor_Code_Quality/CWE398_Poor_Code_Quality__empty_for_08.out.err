@@ -1,0 +1,65 @@
+0x414858 18 Calling good()...
+0x414870 16 Finished good()
+0x414880 21 Benign, fixed string
+0x414898 25 Inside the for statement
+0x4148b8 18 Hello from good()
+0x414968 4 %s
+
+0x4149f0 20 %
+0x414970 4 %d
+
+0x414978 5 %hd
+
+0x414980 4 %f
+
+0x414988 5 %ld
+
+0x414990 5 %zu
+
+0x414998 6 %02x
+
+0x4149a0 5 %ls
+
+0x4149a8 4 %u
+
+0x4149b0 4 %g
+
+0x4149b8 10 %d -- %d
+
+0x4149c8 5 %02x
+0x4148b0 1 
+0x414a08 20 %
+0x4149d0 11 GlobalTrue
+0x4149e0 12 GlobalFalse
+0x414950 4 
+0x414958 4 
+0x414960 4 
+0x618180 4 
+0x618438 4 
+0x618188 4 
+0x618440 4 
+0x618448 8 
+Calling good()...
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Hello from good()
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Inside the for statement
+Hello from good()
+Finished good()

@@ -1,0 +1,1050 @@
+./libtiff/tools/tiffcp -i ./CVE-2016-10270/00074-libtiff-heapoverflow-TIFFFillStrip /tmp/foo; \
+./libtiff/tools/tiffcp -i ./CVE-2016-10271/00100-libtiff-heapoverflow-_TIFFFax3fillruns /tmp/foo2; \
+./libtiff/tools/tiffsplit ./CVE-2016-10271/00100-libtiff-heapoverflow-_TIFFFax3fillruns
+TIFFReadDirectoryCheckOrder: Warning, Invalid TIFF directory; tags are not sorted in ascending order.
+TIFFReadDirectory: Warning, Unknown field with tag 795 (0x31b) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 65407 (0xff7f) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 1 (0x1) encountered.
+./CVE-2016-10270/00074-libtiff-heapoverflow-TIFFFillStrip: Warning, Nonstandard tile width 3, convert file.
+TIFFFetchNormalTag: Warning, Incorrect value for "DocumentName"; tag ignored.
+TIFFFetchNormalTag: Warning, Incorrect count for "FillOrder"; tag ignored.
+TIFFFetchNormalTag: Warning, Incorrect count for "YResolution"; tag ignored.
+TIFFReadDirectory: Warning, TIFF directory is missing required "StripByteCounts" field, calculating from imagelength.
+TIFFReadDirectoryCheckOrder: Warning, Invalid TIFF directory; tags are not sorted in ascending order.
+TIFFReadDirectory: Warning, Unknown field with tag 12 (0xc) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 3 (0x3) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 63492 (0xf804) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 4 (0x4) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 8 (0x8) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 65535 (0xffff) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 62981 (0xf605) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 196 (0xc4) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 60448 (0xec20) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 8707 (0x2203) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 65280 (0xff00) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 29811 (0x7473) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 64 (0x40) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 13 (0xd) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 7446 (0x1d16) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 292 (0x124) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 65407 (0xff7f) encountered.
+TIFFFetchNormalTag: Warning, IO error during reading of "Tag 3"; tag ignored.
+TIFFFetchNormalTag: Warning, Sanity check on size of "Tag 63492" value failed; tag ignored.
+TIFFFetchNormalTag: Warning, IO error during reading of "Tag 8"; tag ignored.
+TIFFFetchNormalTag: Warning, IO error during reading of "Tag 65535"; tag ignored.
+TIFFFetchNormalTag: Warning, IO error during reading of "Tag 196"; tag ignored.
+_TIFFVSetField: ./CVE-2016-10270/00074-libtiff-heapoverflow-TIFFFillStrip: Null count for "Tag 8707" (type 1, writecount -3, passcount 1).
+TIFFFetchNormalTag: Warning, IO error during reading of "YResolution"; tag ignored.
+TIFFFetchNormalTag: Warning, IO error during reading of "Tag 292"; tag ignored.
+TIFFFetchNormalTag: Warning, Incorrect count for "ResolutionUnit"; tag ignored.
+TIFFFetchNormalTag: Warning, Incorrect value for "DocumentName"; tag ignored.
+DumpModeDecode: Not enough data for scanline 0, expected a request for at most 39 bytes, got a request for 65288 bytes.
+=================================================================
+==11024==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000000238 at pc 0x7f227736ed2e bp 0x7ffc27859750 sp 0x7ffc27859748
+READ of size 2 at 0x602000000238 thread T0
+    #0 0x7f227736ed2d in TIFFFillStrip /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_read.c:523:22
+    #1 0x7f227736e353 in TIFFSeek /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_read.c:233:30
+    #2 0x7f227736e080 in TIFFReadScanline /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_read.c:300:11
+    #3 0x4ea537 in readContigStripsIntoBuffer /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffcp.c:1259:7
+    #4 0x4ea45a in cpImage /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffcp.c:1234:8
+    #5 0x4e900d in cpContigStrips2ContigTiles /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffcp.c:1629:9
+    #6 0x4e7a47 in tiffcp /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffcp.c:815:15
+    #7 0x4e5925 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffcp.c:304:9
+    #8 0x7f2275a5ac86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+    #9 0x41c1d9 in _start (/home/acesrc/linuxcve/libtiff/libtiff/tools/.libs/tiffcp+0x41c1d9)
+
+0x602000000238 is located 0 bytes to the right of 8-byte region [0x602000000230,0x602000000238)
+allocated by thread T0 here:
+    #0 0x49f548 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f2277378cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f22772f64d7 in _TIFFCheckRealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:73:8
+    #3 0x7f22772f6550 in _TIFFCheckMalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:88:9
+    #4 0x7f227731059e in ChopUpSingleUncompressedStrip /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:5546:24
+    #5 0x7f2277308562 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:4049:3
+    #6 0x4e59ae in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffcp.c:312:10
+    #7 0x7f2275a5ac86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_read.c:523:22 in TIFFFillStrip
+Shadow bytes around the buggy address:
+  0x0c047fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff8000: fa fa 3f 40 fa fa fd fa fa fa fd fa fa fa fd fa
+  0x0c047fff8010: fa fa fd fa fa fa fd fa fa fa fd fa fa fa fd fa
+  0x0c047fff8020: fa fa fd fa fa fa fd fa fa fa fd fa fa fa 46 fa
+  0x0c047fff8030: fa fa fd fd fa fa fd fd fa fa fd fa fa fa fd fa
+=>0x0c047fff8040: fa fa fd fa fa fa 40[fa]fa fa 40 fa fa fa fa fa
+  0x0c047fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8060: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8070: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8090: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==11024==ABORTING
+TIFFReadDirectoryCheckOrder: Warning, Invalid TIFF directory; tags are not sorted in ascending order.
+TIFFReadDirectory: Warning, Unknown field with tag 2331 (0x91b) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 1535 (0x5ff) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 65535 (0xffff) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 2312 (0x908) encountered.
+TIFFFetchNormalTag: Warning, Incorrect count for "PhotometricInterpretation"; tag ignored.
+TIFFFetchNormalTag: Warning, ASCII value for tag "DocumentName" contains null byte in value; value incorrectly truncated during reading due to implementation limitations.
+TIFFFetchNormalTag: Warning, incorrect count for field "PageNumber", expected 2, got 16777729.
+Fax3Decode1D: Warning, Premature EOL at line 0 of strip 0 (got 12, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 1 of strip 0 (got 30, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 2 of strip 0 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 3 of strip 0 (got 0, expected 231).
+TIFFFillStrip: Invalid strip byte count 0, strip 1.
+TIFFFillStrip: Read error on strip 2; got 337 bytes, expected 16777234.
+TIFFFillStrip: Read error on strip 3; got 337 bytes, expected 65539.
+TIFFFillStrip: Read error on strip 4; got 337 bytes, expected 15138816.
+TIFFFillStrip: Read error on strip 5; got 337 bytes, expected 16842752.
+TIFFFillStrip: Read error on strip 6; got 337 bytes, expected 65539.
+TIFFFillStrip: Read error on strip 7; got 337 bytes, expected 4278190080.
+Fax3Decode1D: Warning, Premature EOL at line 0 of strip 8 (got 3, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 1 of strip 8 (got 12, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 2 of strip 8 (got 30, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 3 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 4 of strip 8 (got 10, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 5 of strip 8 (got 1811, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 6 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 7 of strip 8 (got 22, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 8 of strip 8 (got 47, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 9 of strip 8 (got 26, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 10 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 11 of strip 8 (got 3, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 12 of strip 8 (got 29, expected 231).
+Fax3Decode1D: Bad code word at line 13 of strip 8 (x 0).
+Fax3Decode1D: Warning, Premature EOL at line 13 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 14 of strip 8 (got 45, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 15 of strip 8 (got 6, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 16 of strip 8 (got 24, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 17 of strip 8 (got 50, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 18 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 19 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 20 of strip 8 (got 1709, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 21 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 22 of strip 8 (got 128, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 23 of strip 8 (got 1800, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 24 of strip 8 (got 14, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 25 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 26 of strip 8 (got 66, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 27 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 28 of strip 8 (got 15, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 29 of strip 8 (got 26, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 30 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 31 of strip 8 (got 7, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 32 of strip 8 (got 1804, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 33 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 34 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 35 of strip 8 (got 1670, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 36 of strip 8 (got 3, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 37 of strip 8 (got 1994, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 38 of strip 8 (got 1812, expected 231).
+Fax3Decode1D: Warning, Line length mismatch at line 39 of strip 8 (got 1495, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 40 of strip 8 (got 0, expected 231).
+Fax3Decode1D: Warning, Premature EOL at line 42 of strip 8 (got 0, expected 231).
+TIFFFillStrip: Read error on strip 9; got 337 bytes, expected 1778384896.
+TIFFFillStrip: Read error on strip 10; got 337 bytes, expected 16388882.
+TIFFFillStrip: Read error on strip 11; got 337 bytes, expected 16973824.
+TIFFFillStrip: Read error on strip 12; got 337 bytes, expected 65539.
+TIFFFillStrip: Read error on strip 13; got 337 bytes, expected 196608.
+TIFFFillStrip: Read error on strip 14; got 337 bytes, expected 17170432.
+TIFFFillStrip: Read error on strip 15; got 337 bytes, expected 65539.
+TIFFFillStrip: Read error on strip 16; got 337 bytes, expected 131070.
+TIFFFillStrip: Read error on strip 17; got 337 bytes, expected 17629184.
+TIFFFillStrip: Read error on strip 18; got 337 bytes, expected 983042.
+TIFFFillStrip: Read error on strip 19; got 337 bytes, expected 17432576.
+TIFFFillStrip: Read error on strip 20; got 337 bytes, expected 17891328.
+TIFFFillStrip: Read error on strip 21; got 337 bytes, expected 65540.
+TIFFFillStrip: Read error on strip 22; got 337 bytes, expected 524288.
+TIFFFillStrip: Read error on strip 23; got 337 bytes, expected 18219008.
+TIFFFillStrip: Read error on strip 24; got 337 bytes, expected 65539.
+TIFFFillStrip: Read error on strip 25; got 337 bytes, expected 6553600.
+TIFFFillStrip: Read error on strip 26; got 337 bytes, expected 18284544.
+TIFFFillStrip: Read error on strip 27; got 337 bytes, expected 1900548.
+TIFFFillStrip: Read error on strip 28; got 337 bytes, expected 262144.
+TIFFFillStrip: Invalid strip byte count 0, strip 29.
+TIFFFillStrip: Invalid strip byte count 0, strip 30.
+TIFFFillStrip: Invalid strip byte count 0, strip 31.
+TIFFFillStrip: Invalid strip byte count 0, strip 32.
+TIFFFillStrip: Invalid strip byte count 0, strip 33.
+TIFFFillStrip: Invalid strip byte count 0, strip 34.
+TIFFFillStrip: Invalid strip byte count 0, strip 35.
+TIFFFillStrip: Invalid strip byte count 0, strip 36.
+TIFFFillStrip: Invalid strip byte count 0, strip 37.
+TIFFFillStrip: Invalid strip byte count 0, strip 38.
+TIFFFillStrip: Invalid strip byte count 0, strip 39.
+TIFFFillStrip: Invalid strip byte count 0, strip 40.
+TIFFFillStrip: Invalid strip byte count 0, strip 41.
+TIFFFillStrip: Invalid strip byte count 0, strip 42.
+TIFFFillStrip: Invalid strip byte count 0, strip 43.
+TIFFFillStrip: Invalid strip byte count 0, strip 44.
+TIFFFillStrip: Invalid strip byte count 0, strip 45.
+TIFFFillStrip: Invalid strip byte count 0, strip 46.
+TIFFFillStrip: Invalid strip byte count 0, strip 47.
+TIFFFillStrip: Invalid strip byte count 0, strip 48.
+TIFFFillStrip: Invalid strip byte count 0, strip 49.
+TIFFFillStrip: Invalid strip byte count 0, strip 50.
+TIFFFillStrip: Invalid strip byte count 0, strip 51.
+TIFFFillStrip: Invalid strip byte count 0, strip 52.
+TIFFFillStrip: Invalid strip byte count 0, strip 53.
+TIFFFillStrip: Invalid strip byte count 0, strip 54.
+TIFFFillStrip: Invalid strip byte count 0, strip 55.
+TIFFFillStrip: Invalid strip byte count 0, strip 56.
+TIFFFillStrip: Invalid strip byte count 0, strip 57.
+TIFFFillStrip: Invalid strip byte count 0, strip 58.
+TIFFFillStrip: Invalid strip byte count 0, strip 59.
+TIFFFillStrip: Invalid strip byte count 0, strip 60.
+TIFFFillStrip: Invalid strip byte count 0, strip 61.
+TIFFFillStrip: Invalid strip byte count 0, strip 62.
+TIFFFillStrip: Invalid strip byte count 0, strip 63.
+TIFFFillStrip: Invalid strip byte count 0, strip 64.
+TIFFFillStrip: Invalid strip byte count 0, strip 65.
+TIFFFillStrip: Invalid strip byte count 0, strip 66.
+TIFFFillStrip: Invalid strip byte count 0, strip 67.
+TIFFFillStrip: Invalid strip byte count 0, strip 68.
+TIFFFillStrip: Invalid strip byte count 0, strip 69.
+TIFFFillStrip: Invalid strip byte count 0, strip 70.
+TIFFFillStrip: Invalid strip byte count 0, strip 71.
+TIFFFillStrip: Invalid strip byte count 0, strip 72.
+TIFFFillStrip: Invalid strip byte count 0, strip 73.
+TIFFFillStrip: Invalid strip byte count 0, strip 74.
+TIFFFillStrip: Invalid strip byte count 0, strip 75.
+TIFFFillStrip: Invalid strip byte count 0, strip 76.
+TIFFFillStrip: Invalid strip byte count 0, strip 77.
+TIFFFillStrip: Invalid strip byte count 0, strip 78.
+TIFFFillStrip: Invalid strip byte count 0, strip 79.
+TIFFFillStrip: Invalid strip byte count 0, strip 80.
+TIFFFillStrip: Invalid strip byte count 0, strip 81.
+TIFFFillStrip: Invalid strip byte count 0, strip 82.
+TIFFFillStrip: Invalid strip byte count 0, strip 83.
+TIFFFillStrip: Invalid strip byte count 0, strip 84.
+TIFFFillStrip: Invalid strip byte count 0, strip 85.
+TIFFFillStrip: Invalid strip byte count 0, strip 86.
+TIFFFillStrip: Invalid strip byte count 0, strip 87.
+TIFFFillStrip: Invalid strip byte count 0, strip 88.
+TIFFFillStrip: Invalid strip byte count 0, strip 89.
+TIFFFillStrip: Invalid strip byte count 0, strip 90.
+TIFFFillStrip: Invalid strip byte count 0, strip 91.
+TIFFFillStrip: Invalid strip byte count 0, strip 92.
+TIFFFillStrip: Invalid strip byte count 0, strip 93.
+TIFFFillStrip: Invalid strip byte count 0, strip 94.
+TIFFFillStrip: Invalid strip byte count 0, strip 95.
+TIFFFillStrip: Invalid strip byte count 0, strip 96.
+TIFFFillStrip: Invalid strip byte count 0, strip 97.
+TIFFFillStrip: Invalid strip byte count 0, strip 98.
+TIFFFillStrip: Invalid strip byte count 0, strip 99.
+TIFFFillStrip: Invalid strip byte count 0, strip 100.
+TIFFFillStrip: Invalid strip byte count 0, strip 101.
+TIFFFillStrip: Invalid strip byte count 0, strip 102.
+TIFFFillStrip: Invalid strip byte count 0, strip 103.
+TIFFFillStrip: Invalid strip byte count 0, strip 104.
+TIFFFillStrip: Invalid strip byte count 0, strip 105.
+TIFFFillStrip: Invalid strip byte count 0, strip 106.
+TIFFFillStrip: Invalid strip byte count 0, strip 107.
+TIFFFillStrip: Invalid strip byte count 0, strip 108.
+TIFFFillStrip: Invalid strip byte count 0, strip 109.
+TIFFFillStrip: Invalid strip byte count 0, strip 110.
+TIFFFillStrip: Invalid strip byte count 0, strip 111.
+TIFFFillStrip: Invalid strip byte count 0, strip 112.
+TIFFFillStrip: Invalid strip byte count 0, strip 113.
+TIFFFillStrip: Invalid strip byte count 0, strip 114.
+TIFFFillStrip: Invalid strip byte count 0, strip 115.
+TIFFFillStrip: Invalid strip byte count 0, strip 116.
+TIFFFillStrip: Invalid strip byte count 0, strip 117.
+TIFFFillStrip: Invalid strip byte count 0, strip 118.
+TIFFFillStrip: Invalid strip byte count 0, strip 119.
+TIFFFillStrip: Invalid strip byte count 0, strip 120.
+TIFFFillStrip: Invalid strip byte count 0, strip 121.
+TIFFFillStrip: Invalid strip byte count 0, strip 122.
+TIFFFillStrip: Invalid strip byte count 0, strip 123.
+TIFFFillStrip: Invalid strip byte count 0, strip 124.
+TIFFFillStrip: Invalid strip byte count 0, strip 125.
+TIFFFillStrip: Invalid strip byte count 0, strip 126.
+TIFFFillStrip: Invalid strip byte count 0, strip 127.
+TIFFFillStrip: Invalid strip byte count 0, strip 128.
+TIFFFillStrip: Invalid strip byte count 0, strip 129.
+TIFFFillStrip: Invalid strip byte count 0, strip 130.
+TIFFFillStrip: Invalid strip byte count 0, strip 131.
+TIFFFillStrip: Invalid strip byte count 0, strip 132.
+TIFFFillStrip: Invalid strip byte count 0, strip 133.
+TIFFFillStrip: Invalid strip byte count 0, strip 134.
+TIFFFillStrip: Invalid strip byte count 0, strip 135.
+TIFFFillStrip: Invalid strip byte count 0, strip 136.
+TIFFFillStrip: Invalid strip byte count 0, strip 137.
+TIFFFillStrip: Invalid strip byte count 0, strip 138.
+TIFFFillStrip: Invalid strip byte count 0, strip 139.
+TIFFFillStrip: Invalid strip byte count 0, strip 140.
+TIFFFillStrip: Invalid strip byte count 0, strip 141.
+TIFFFillStrip: Invalid strip byte count 0, strip 142.
+TIFFFillStrip: Invalid strip byte count 0, strip 143.
+TIFFFillStrip: Invalid strip byte count 0, strip 144.
+TIFFFillStrip: Invalid strip byte count 0, strip 145.
+TIFFFillStrip: Invalid strip byte count 0, strip 146.
+TIFFFillStrip: Invalid strip byte count 0, strip 147.
+TIFFFillStrip: Invalid strip byte count 0, strip 148.
+TIFFFillStrip: Invalid strip byte count 0, strip 149.
+TIFFFillStrip: Invalid strip byte count 0, strip 150.
+TIFFFillStrip: Invalid strip byte count 0, strip 151.
+TIFFFillStrip: Invalid strip byte count 0, strip 152.
+TIFFFillStrip: Invalid strip byte count 0, strip 153.
+TIFFFillStrip: Invalid strip byte count 0, strip 154.
+TIFFFillStrip: Invalid strip byte count 0, strip 155.
+TIFFFillStrip: Invalid strip byte count 0, strip 156.
+TIFFFillStrip: Invalid strip byte count 0, strip 157.
+TIFFFillStrip: Invalid strip byte count 0, strip 158.
+TIFFFillStrip: Invalid strip byte count 0, strip 159.
+TIFFFillStrip: Invalid strip byte count 0, strip 160.
+TIFFFillStrip: Invalid strip byte count 0, strip 161.
+TIFFFillStrip: Invalid strip byte count 0, strip 162.
+TIFFFillStrip: Invalid strip byte count 0, strip 163.
+TIFFFillStrip: Invalid strip byte count 0, strip 164.
+TIFFFillStrip: Invalid strip byte count 0, strip 165.
+TIFFFillStrip: Invalid strip byte count 0, strip 166.
+TIFFFillStrip: Invalid strip byte count 0, strip 167.
+TIFFFillStrip: Invalid strip byte count 0, strip 168.
+TIFFFillStrip: Invalid strip byte count 0, strip 169.
+TIFFFillStrip: Invalid strip byte count 0, strip 170.
+TIFFFillStrip: Invalid strip byte count 0, strip 171.
+TIFFFillStrip: Invalid strip byte count 0, strip 172.
+TIFFFillStrip: Invalid strip byte count 0, strip 173.
+TIFFFillStrip: Invalid strip byte count 0, strip 174.
+TIFFFillStrip: Invalid strip byte count 0, strip 175.
+TIFFFillStrip: Invalid strip byte count 0, strip 176.
+TIFFFillStrip: Invalid strip byte count 0, strip 177.
+TIFFFillStrip: Invalid strip byte count 0, strip 178.
+TIFFFillStrip: Invalid strip byte count 0, strip 179.
+TIFFFillStrip: Invalid strip byte count 0, strip 180.
+TIFFFillStrip: Invalid strip byte count 0, strip 181.
+TIFFFillStrip: Invalid strip byte count 0, strip 182.
+TIFFFillStrip: Invalid strip byte count 0, strip 183.
+TIFFFillStrip: Invalid strip byte count 0, strip 184.
+TIFFFillStrip: Invalid strip byte count 0, strip 185.
+TIFFFillStrip: Invalid strip byte count 0, strip 186.
+TIFFFillStrip: Invalid strip byte count 0, strip 187.
+TIFFFillStrip: Invalid strip byte count 0, strip 188.
+TIFFFillStrip: Invalid strip byte count 0, strip 189.
+TIFFFillStrip: Invalid strip byte count 0, strip 190.
+TIFFFillStrip: Invalid strip byte count 0, strip 191.
+TIFFFillStrip: Invalid strip byte count 0, strip 192.
+TIFFFillStrip: Invalid strip byte count 0, strip 193.
+TIFFFillStrip: Invalid strip byte count 0, strip 194.
+TIFFFillStrip: Invalid strip byte count 0, strip 195.
+TIFFFillStrip: Invalid strip byte count 0, strip 196.
+TIFFFillStrip: Invalid strip byte count 0, strip 197.
+TIFFFillStrip: Invalid strip byte count 0, strip 198.
+TIFFFillStrip: Invalid strip byte count 0, strip 199.
+TIFFFillStrip: Invalid strip byte count 0, strip 200.
+TIFFFillStrip: Invalid strip byte count 0, strip 201.
+TIFFFillStrip: Invalid strip byte count 0, strip 202.
+TIFFFillStrip: Invalid strip byte count 0, strip 203.
+TIFFFillStrip: Invalid strip byte count 0, strip 204.
+TIFFFillStrip: Invalid strip byte count 0, strip 205.
+TIFFFillStrip: Invalid strip byte count 0, strip 206.
+TIFFFillStrip: Invalid strip byte count 0, strip 207.
+TIFFFillStrip: Invalid strip byte count 0, strip 208.
+TIFFFillStrip: Invalid strip byte count 0, strip 209.
+TIFFFillStrip: Invalid strip byte count 0, strip 210.
+TIFFFillStrip: Invalid strip byte count 0, strip 211.
+TIFFFillStrip: Invalid strip byte count 0, strip 212.
+TIFFFillStrip: Invalid strip byte count 0, strip 213.
+TIFFFillStrip: Invalid strip byte count 0, strip 214.
+TIFFFillStrip: Invalid strip byte count 0, strip 215.
+TIFFFillStrip: Invalid strip byte count 0, strip 216.
+TIFFFillStrip: Invalid strip byte count 0, strip 217.
+TIFFFillStrip: Invalid strip byte count 0, strip 218.
+TIFFFillStrip: Invalid strip byte count 0, strip 219.
+TIFFFillStrip: Invalid strip byte count 0, strip 220.
+TIFFFillStrip: Invalid strip byte count 0, strip 221.
+TIFFFillStrip: Invalid strip byte count 0, strip 222.
+TIFFFillStrip: Invalid strip byte count 0, strip 223.
+TIFFFillStrip: Invalid strip byte count 0, strip 224.
+TIFFFillStrip: Invalid strip byte count 0, strip 225.
+TIFFFillStrip: Invalid strip byte count 0, strip 226.
+TIFFFillStrip: Invalid strip byte count 0, strip 227.
+TIFFFillStrip: Invalid strip byte count 0, strip 228.
+TIFFFillStrip: Invalid strip byte count 0, strip 229.
+TIFFFillStrip: Invalid strip byte count 0, strip 230.
+TIFFFillStrip: Invalid strip byte count 0, strip 231.
+TIFFFillStrip: Invalid strip byte count 0, strip 232.
+TIFFFillStrip: Invalid strip byte count 0, strip 233.
+TIFFFillStrip: Invalid strip byte count 0, strip 234.
+TIFFFillStrip: Invalid strip byte count 0, strip 235.
+TIFFFillStrip: Invalid strip byte count 0, strip 236.
+TIFFFillStrip: Invalid strip byte count 0, strip 237.
+TIFFFillStrip: Invalid strip byte count 0, strip 238.
+TIFFFillStrip: Invalid strip byte count 0, strip 239.
+TIFFFillStrip: Invalid strip byte count 0, strip 240.
+TIFFFillStrip: Invalid strip byte count 0, strip 241.
+TIFFFillStrip: Invalid strip byte count 0, strip 242.
+TIFFFillStrip: Invalid strip byte count 0, strip 243.
+TIFFFillStrip: Invalid strip byte count 0, strip 244.
+TIFFFillStrip: Invalid strip byte count 0, strip 245.
+TIFFFillStrip: Invalid strip byte count 0, strip 246.
+TIFFFillStrip: Invalid strip byte count 0, strip 247.
+TIFFFillStrip: Invalid strip byte count 0, strip 248.
+TIFFFillStrip: Invalid strip byte count 0, strip 249.
+TIFFFillStrip: Invalid strip byte count 0, strip 250.
+TIFFFillStrip: Invalid strip byte count 0, strip 251.
+TIFFFillStrip: Invalid strip byte count 0, strip 252.
+TIFFFillStrip: Invalid strip byte count 0, strip 253.
+TIFFFillStrip: Invalid strip byte count 0, strip 254.
+TIFFFillStrip: Invalid strip byte count 0, strip 255.
+TIFFFillStrip: Invalid strip byte count 0, strip 256.
+TIFFFillStrip: Invalid strip byte count 0, strip 257.
+TIFFFillStrip: Invalid strip byte count 0, strip 258.
+TIFFFillStrip: Invalid strip byte count 0, strip 259.
+TIFFFillStrip: Invalid strip byte count 0, strip 260.
+TIFFFillStrip: Invalid strip byte count 0, strip 261.
+TIFFFillStrip: Invalid strip byte count 0, strip 262.
+TIFFFillStrip: Invalid strip byte count 0, strip 263.
+TIFFFillStrip: Invalid strip byte count 0, strip 264.
+TIFFFillStrip: Invalid strip byte count 0, strip 265.
+TIFFFillStrip: Invalid strip byte count 0, strip 266.
+TIFFFillStrip: Invalid strip byte count 0, strip 267.
+TIFFFillStrip: Invalid strip byte count 0, strip 268.
+TIFFFillStrip: Invalid strip byte count 0, strip 269.
+TIFFFillStrip: Invalid strip byte count 0, strip 270.
+TIFFFillStrip: Invalid strip byte count 0, strip 271.
+TIFFFillStrip: Invalid strip byte count 0, strip 272.
+TIFFFillStrip: Invalid strip byte count 0, strip 273.
+TIFFFillStrip: Invalid strip byte count 0, strip 274.
+TIFFFillStrip: Invalid strip byte count 0, strip 275.
+TIFFFillStrip: Invalid strip byte count 0, strip 276.
+TIFFFillStrip: Invalid strip byte count 0, strip 277.
+TIFFFillStrip: Invalid strip byte count 0, strip 278.
+TIFFFillStrip: Invalid strip byte count 0, strip 279.
+TIFFFillStrip: Invalid strip byte count 0, strip 280.
+TIFFFillStrip: Invalid strip byte count 0, strip 281.
+TIFFFillStrip: Invalid strip byte count 0, strip 282.
+TIFFFillStrip: Invalid strip byte count 0, strip 283.
+TIFFFillStrip: Invalid strip byte count 0, strip 284.
+TIFFFillStrip: Invalid strip byte count 0, strip 285.
+TIFFFillStrip: Invalid strip byte count 0, strip 286.
+TIFFFillStrip: Invalid strip byte count 0, strip 287.
+TIFFFillStrip: Invalid strip byte count 0, strip 288.
+TIFFFillStrip: Invalid strip byte count 0, strip 289.
+TIFFFillStrip: Invalid strip byte count 0, strip 290.
+TIFFFillStrip: Invalid strip byte count 0, strip 291.
+TIFFFillStrip: Invalid strip byte count 0, strip 292.
+TIFFFillStrip: Invalid strip byte count 0, strip 293.
+TIFFFillStrip: Invalid strip byte count 0, strip 294.
+TIFFFillStrip: Invalid strip byte count 0, strip 295.
+TIFFFillStrip: Invalid strip byte count 0, strip 296.
+TIFFFillStrip: Invalid strip byte count 0, strip 297.
+TIFFFillStrip: Invalid strip byte count 0, strip 298.
+TIFFFillStrip: Invalid strip byte count 0, strip 299.
+TIFFFillStrip: Invalid strip byte count 0, strip 300.
+TIFFFillStrip: Invalid strip byte count 0, strip 301.
+TIFFFillStrip: Invalid strip byte count 0, strip 302.
+TIFFFillStrip: Invalid strip byte count 0, strip 303.
+TIFFFillStrip: Invalid strip byte count 0, strip 304.
+TIFFFillStrip: Invalid strip byte count 0, strip 305.
+TIFFFillStrip: Invalid strip byte count 0, strip 306.
+TIFFFillStrip: Invalid strip byte count 0, strip 307.
+TIFFFillStrip: Invalid strip byte count 0, strip 308.
+TIFFFillStrip: Invalid strip byte count 0, strip 309.
+TIFFFillStrip: Invalid strip byte count 0, strip 310.
+TIFFFillStrip: Invalid strip byte count 0, strip 311.
+TIFFFillStrip: Invalid strip byte count 0, strip 312.
+TIFFFillStrip: Invalid strip byte count 0, strip 313.
+TIFFFillStrip: Invalid strip byte count 0, strip 314.
+TIFFFillStrip: Invalid strip byte count 0, strip 315.
+TIFFFillStrip: Invalid strip byte count 0, strip 316.
+TIFFFillStrip: Invalid strip byte count 0, strip 317.
+TIFFFillStrip: Invalid strip byte count 0, strip 318.
+TIFFFillStrip: Invalid strip byte count 0, strip 319.
+TIFFFillStrip: Invalid strip byte count 0, strip 320.
+TIFFFillStrip: Invalid strip byte count 0, strip 321.
+TIFFFillStrip: Invalid strip byte count 0, strip 322.
+TIFFFillStrip: Invalid strip byte count 0, strip 323.
+TIFFFillStrip: Invalid strip byte count 0, strip 324.
+TIFFFillStrip: Invalid strip byte count 0, strip 325.
+TIFFFillStrip: Invalid strip byte count 0, strip 326.
+TIFFFillStrip: Invalid strip byte count 0, strip 327.
+TIFFFillStrip: Invalid strip byte count 0, strip 328.
+TIFFFillStrip: Invalid strip byte count 0, strip 329.
+TIFFFillStrip: Invalid strip byte count 0, strip 330.
+TIFFFillStrip: Invalid strip byte count 0, strip 331.
+TIFFFillStrip: Invalid strip byte count 0, strip 332.
+TIFFFillStrip: Invalid strip byte count 0, strip 333.
+TIFFFillStrip: Invalid strip byte count 0, strip 334.
+TIFFFillStrip: Invalid strip byte count 0, strip 335.
+TIFFFillStrip: Invalid strip byte count 0, strip 336.
+TIFFFillStrip: Invalid strip byte count 0, strip 337.
+TIFFFillStrip: Invalid strip byte count 0, strip 338.
+TIFFFillStrip: Invalid strip byte count 0, strip 339.
+TIFFFillStrip: Invalid strip byte count 0, strip 340.
+TIFFFillStrip: Invalid strip byte count 0, strip 341.
+TIFFFillStrip: Invalid strip byte count 0, strip 342.
+TIFFFillStrip: Invalid strip byte count 0, strip 343.
+TIFFFillStrip: Invalid strip byte count 0, strip 344.
+TIFFFillStrip: Invalid strip byte count 0, strip 345.
+TIFFFillStrip: Invalid strip byte count 0, strip 346.
+TIFFFillStrip: Invalid strip byte count 0, strip 347.
+TIFFFillStrip: Invalid strip byte count 0, strip 348.
+TIFFFillStrip: Invalid strip byte count 0, strip 349.
+TIFFFillStrip: Invalid strip byte count 0, strip 350.
+TIFFFillStrip: Invalid strip byte count 0, strip 351.
+TIFFFillStrip: Invalid strip byte count 0, strip 352.
+TIFFFillStrip: Invalid strip byte count 0, strip 353.
+TIFFFillStrip: Invalid strip byte count 0, strip 354.
+TIFFFillStrip: Invalid strip byte count 0, strip 355.
+TIFFFillStrip: Invalid strip byte count 0, strip 356.
+TIFFFillStrip: Invalid strip byte count 0, strip 357.
+TIFFFillStrip: Invalid strip byte count 0, strip 358.
+TIFFFillStrip: Invalid strip byte count 0, strip 359.
+TIFFFillStrip: Invalid strip byte count 0, strip 360.
+TIFFFillStrip: Invalid strip byte count 0, strip 361.
+TIFFFillStrip: Invalid strip byte count 0, strip 362.
+TIFFFillStrip: Invalid strip byte count 0, strip 363.
+TIFFFillStrip: Invalid strip byte count 0, strip 364.
+TIFFFillStrip: Invalid strip byte count 0, strip 365.
+TIFFFillStrip: Invalid strip byte count 0, strip 366.
+TIFFFillStrip: Invalid strip byte count 0, strip 367.
+TIFFFillStrip: Invalid strip byte count 0, strip 368.
+TIFFFillStrip: Invalid strip byte count 0, strip 369.
+TIFFFillStrip: Invalid strip byte count 0, strip 370.
+TIFFFillStrip: Invalid strip byte count 0, strip 371.
+TIFFFillStrip: Invalid strip byte count 0, strip 372.
+TIFFFillStrip: Invalid strip byte count 0, strip 373.
+TIFFFillStrip: Invalid strip byte count 0, strip 374.
+TIFFFillStrip: Invalid strip byte count 0, strip 375.
+TIFFFillStrip: Invalid strip byte count 0, strip 376.
+TIFFFillStrip: Invalid strip byte count 0, strip 377.
+TIFFFillStrip: Invalid strip byte count 0, strip 378.
+TIFFFillStrip: Invalid strip byte count 0, strip 379.
+TIFFFillStrip: Invalid strip byte count 0, strip 380.
+TIFFFillStrip: Invalid strip byte count 0, strip 381.
+TIFFFillStrip: Invalid strip byte count 0, strip 382.
+TIFFFillStrip: Invalid strip byte count 0, strip 383.
+TIFFFillStrip: Invalid strip byte count 0, strip 384.
+TIFFFillStrip: Invalid strip byte count 0, strip 385.
+TIFFFillStrip: Invalid strip byte count 0, strip 386.
+TIFFFillStrip: Invalid strip byte count 0, strip 387.
+TIFFFillStrip: Invalid strip byte count 0, strip 388.
+TIFFFillStrip: Invalid strip byte count 0, strip 389.
+TIFFFillStrip: Invalid strip byte count 0, strip 390.
+TIFFFillStrip: Invalid strip byte count 0, strip 391.
+TIFFFillStrip: Invalid strip byte count 0, strip 392.
+TIFFFillStrip: Invalid strip byte count 0, strip 393.
+TIFFFillStrip: Invalid strip byte count 0, strip 394.
+TIFFFillStrip: Invalid strip byte count 0, strip 395.
+TIFFFillStrip: Invalid strip byte count 0, strip 396.
+TIFFFillStrip: Invalid strip byte count 0, strip 397.
+TIFFFillStrip: Invalid strip byte count 0, strip 398.
+TIFFFillStrip: Invalid strip byte count 0, strip 399.
+TIFFFillStrip: Invalid strip byte count 0, strip 400.
+TIFFFillStrip: Invalid strip byte count 0, strip 401.
+TIFFFillStrip: Invalid strip byte count 0, strip 402.
+TIFFFillStrip: Invalid strip byte count 0, strip 403.
+TIFFFillStrip: Invalid strip byte count 0, strip 404.
+TIFFFillStrip: Invalid strip byte count 0, strip 405.
+TIFFFillStrip: Invalid strip byte count 0, strip 406.
+TIFFFillStrip: Invalid strip byte count 0, strip 407.
+TIFFFillStrip: Invalid strip byte count 0, strip 408.
+TIFFFillStrip: Invalid strip byte count 0, strip 409.
+TIFFFillStrip: Invalid strip byte count 0, strip 410.
+TIFFFillStrip: Invalid strip byte count 0, strip 411.
+TIFFFillStrip: Invalid strip byte count 0, strip 412.
+TIFFFillStrip: Invalid strip byte count 0, strip 413.
+TIFFFillStrip: Invalid strip byte count 0, strip 414.
+TIFFFillStrip: Invalid strip byte count 0, strip 415.
+TIFFFillStrip: Invalid strip byte count 0, strip 416.
+TIFFFillStrip: Invalid strip byte count 0, strip 417.
+TIFFFillStrip: Invalid strip byte count 0, strip 418.
+TIFFFillStrip: Invalid strip byte count 0, strip 419.
+TIFFFillStrip: Invalid strip byte count 0, strip 420.
+TIFFFillStrip: Invalid strip byte count 0, strip 421.
+TIFFFillStrip: Invalid strip byte count 0, strip 422.
+TIFFFillStrip: Invalid strip byte count 0, strip 423.
+TIFFFillStrip: Invalid strip byte count 0, strip 424.
+TIFFFillStrip: Invalid strip byte count 0, strip 425.
+TIFFFillStrip: Invalid strip byte count 0, strip 426.
+TIFFFillStrip: Invalid strip byte count 0, strip 427.
+TIFFFillStrip: Invalid strip byte count 0, strip 428.
+TIFFFillStrip: Invalid strip byte count 0, strip 429.
+TIFFFillStrip: Invalid strip byte count 0, strip 430.
+TIFFFillStrip: Invalid strip byte count 0, strip 431.
+TIFFFillStrip: Invalid strip byte count 0, strip 432.
+TIFFFillStrip: Invalid strip byte count 0, strip 433.
+TIFFFillStrip: Invalid strip byte count 0, strip 434.
+TIFFFillStrip: Invalid strip byte count 0, strip 435.
+TIFFFillStrip: Invalid strip byte count 0, strip 436.
+TIFFFillStrip: Invalid strip byte count 0, strip 437.
+TIFFFillStrip: Invalid strip byte count 0, strip 438.
+TIFFFillStrip: Invalid strip byte count 0, strip 439.
+TIFFFillStrip: Invalid strip byte count 0, strip 440.
+TIFFFillStrip: Invalid strip byte count 0, strip 441.
+TIFFFillStrip: Invalid strip byte count 0, strip 442.
+TIFFFillStrip: Invalid strip byte count 0, strip 443.
+TIFFFillStrip: Invalid strip byte count 0, strip 444.
+TIFFFillStrip: Invalid strip byte count 0, strip 445.
+TIFFFillStrip: Invalid strip byte count 0, strip 446.
+TIFFFillStrip: Invalid strip byte count 0, strip 447.
+TIFFFillStrip: Invalid strip byte count 0, strip 448.
+TIFFFillStrip: Invalid strip byte count 0, strip 449.
+TIFFFillStrip: Invalid strip byte count 0, strip 450.
+TIFFFillStrip: Invalid strip byte count 0, strip 451.
+TIFFFillStrip: Invalid strip byte count 0, strip 452.
+TIFFFillStrip: Invalid strip byte count 0, strip 453.
+TIFFFillStrip: Invalid strip byte count 0, strip 454.
+TIFFFillStrip: Invalid strip byte count 0, strip 455.
+TIFFFillStrip: Invalid strip byte count 0, strip 456.
+TIFFFillStrip: Invalid strip byte count 0, strip 457.
+TIFFFillStrip: Invalid strip byte count 0, strip 458.
+TIFFFillStrip: Invalid strip byte count 0, strip 459.
+TIFFFillStrip: Invalid strip byte count 0, strip 460.
+TIFFFillStrip: Invalid strip byte count 0, strip 461.
+TIFFFillStrip: Invalid strip byte count 0, strip 462.
+TIFFFillStrip: Invalid strip byte count 0, strip 463.
+TIFFFillStrip: Invalid strip byte count 0, strip 464.
+TIFFFillStrip: Invalid strip byte count 0, strip 465.
+TIFFFillStrip: Invalid strip byte count 0, strip 466.
+TIFFFillStrip: Invalid strip byte count 0, strip 467.
+TIFFFillStrip: Invalid strip byte count 0, strip 468.
+TIFFFillStrip: Invalid strip byte count 0, strip 469.
+TIFFFillStrip: Invalid strip byte count 0, strip 470.
+TIFFFillStrip: Invalid strip byte count 0, strip 471.
+TIFFFillStrip: Invalid strip byte count 0, strip 472.
+TIFFFillStrip: Invalid strip byte count 0, strip 473.
+TIFFFillStrip: Invalid strip byte count 0, strip 474.
+TIFFFillStrip: Invalid strip byte count 0, strip 475.
+TIFFFillStrip: Invalid strip byte count 0, strip 476.
+TIFFFillStrip: Invalid strip byte count 0, strip 477.
+TIFFFillStrip: Invalid strip byte count 0, strip 478.
+TIFFFillStrip: Invalid strip byte count 0, strip 479.
+TIFFFillStrip: Invalid strip byte count 0, strip 480.
+TIFFFillStrip: Invalid strip byte count 0, strip 481.
+TIFFFillStrip: Invalid strip byte count 0, strip 482.
+TIFFFillStrip: Invalid strip byte count 0, strip 483.
+TIFFFillStrip: Invalid strip byte count 0, strip 484.
+TIFFFillStrip: Invalid strip byte count 0, strip 485.
+TIFFFillStrip: Invalid strip byte count 0, strip 486.
+TIFFFillStrip: Invalid strip byte count 0, strip 487.
+TIFFFillStrip: Invalid strip byte count 0, strip 488.
+TIFFFillStrip: Invalid strip byte count 0, strip 489.
+TIFFFillStrip: Invalid strip byte count 0, strip 490.
+TIFFFillStrip: Invalid strip byte count 0, strip 491.
+TIFFFillStrip: Invalid strip byte count 0, strip 492.
+TIFFFillStrip: Invalid strip byte count 0, strip 493.
+TIFFFillStrip: Invalid strip byte count 0, strip 494.
+TIFFFillStrip: Invalid strip byte count 0, strip 495.
+TIFFFillStrip: Invalid strip byte count 0, strip 496.
+TIFFFillStrip: Invalid strip byte count 0, strip 497.
+TIFFFillStrip: Invalid strip byte count 0, strip 498.
+TIFFFillStrip: Invalid strip byte count 0, strip 499.
+TIFFFillStrip: Invalid strip byte count 0, strip 500.
+TIFFFillStrip: Invalid strip byte count 0, strip 501.
+TIFFFillStrip: Invalid strip byte count 0, strip 502.
+TIFFFillStrip: Invalid strip byte count 0, strip 503.
+TIFFFillStrip: Invalid strip byte count 0, strip 504.
+TIFFFillStrip: Invalid strip byte count 0, strip 505.
+TIFFFillStrip: Invalid strip byte count 0, strip 506.
+TIFFFillStrip: Invalid strip byte count 0, strip 507.
+TIFFFillStrip: Invalid strip byte count 0, strip 508.
+TIFFFillStrip: Invalid strip byte count 0, strip 509.
+TIFFFillStrip: Invalid strip byte count 0, strip 510.
+TIFFFillStrip: Invalid strip byte count 0, strip 511.
+TIFFFillStrip: Invalid strip byte count 0, strip 512.
+TIFFFillStrip: Invalid strip byte count 0, strip 513.
+TIFFFillStrip: Invalid strip byte count 0, strip 514.
+TIFFFillStrip: Invalid strip byte count 0, strip 515.
+TIFFFillStrip: Invalid strip byte count 0, strip 516.
+TIFFFillStrip: Invalid strip byte count 0, strip 517.
+TIFFFillStrip: Invalid strip byte count 0, strip 518.
+TIFFFillStrip: Invalid strip byte count 0, strip 519.
+TIFFFillStrip: Invalid strip byte count 0, strip 520.
+TIFFFillStrip: Invalid strip byte count 0, strip 521.
+TIFFFillStrip: Invalid strip byte count 0, strip 522.
+TIFFFillStrip: Invalid strip byte count 0, strip 523.
+TIFFFillStrip: Invalid strip byte count 0, strip 524.
+TIFFFillStrip: Invalid strip byte count 0, strip 525.
+TIFFFillStrip: Invalid strip byte count 0, strip 526.
+TIFFFillStrip: Invalid strip byte count 0, strip 527.
+TIFFFillStrip: Invalid strip byte count 0, strip 528.
+TIFFFillStrip: Invalid strip byte count 0, strip 529.
+TIFFFillStrip: Invalid strip byte count 0, strip 530.
+TIFFFillStrip: Invalid strip byte count 0, strip 531.
+TIFFFillStrip: Invalid strip byte count 0, strip 532.
+TIFFFillStrip: Invalid strip byte count 0, strip 533.
+TIFFFillStrip: Invalid strip byte count 0, strip 534.
+TIFFFillStrip: Invalid strip byte count 0, strip 535.
+TIFFFillStrip: Invalid strip byte count 0, strip 536.
+TIFFFillStrip: Invalid strip byte count 0, strip 537.
+TIFFFillStrip: Invalid strip byte count 0, strip 538.
+TIFFFillStrip: Invalid strip byte count 0, strip 539.
+TIFFFillStrip: Invalid strip byte count 0, strip 540.
+TIFFFillStrip: Invalid strip byte count 0, strip 541.
+TIFFFillStrip: Invalid strip byte count 0, strip 542.
+TIFFFillStrip: Invalid strip byte count 0, strip 543.
+TIFFFillStrip: Invalid strip byte count 0, strip 544.
+TIFFFillStrip: Invalid strip byte count 0, strip 545.
+TIFFFillStrip: Invalid strip byte count 0, strip 546.
+TIFFFillStrip: Invalid strip byte count 0, strip 547.
+TIFFFillStrip: Invalid strip byte count 0, strip 548.
+TIFFFillStrip: Invalid strip byte count 0, strip 549.
+TIFFFillStrip: Invalid strip byte count 0, strip 550.
+TIFFFillStrip: Invalid strip byte count 0, strip 551.
+TIFFFillStrip: Invalid strip byte count 0, strip 552.
+TIFFFillStrip: Invalid strip byte count 0, strip 553.
+TIFFFillStrip: Invalid strip byte count 0, strip 554.
+TIFFFillStrip: Invalid strip byte count 0, strip 555.
+TIFFFillStrip: Invalid strip byte count 0, strip 556.
+TIFFFillStrip: Invalid strip byte count 0, strip 557.
+TIFFFillStrip: Invalid strip byte count 0, strip 558.
+TIFFFillStrip: Invalid strip byte count 0, strip 559.
+TIFFFillStrip: Invalid strip byte count 0, strip 560.
+TIFFFillStrip: Invalid strip byte count 0, strip 561.
+TIFFFillStrip: Invalid strip byte count 0, strip 562.
+TIFFFillStrip: Invalid strip byte count 0, strip 563.
+TIFFFillStrip: Invalid strip byte count 0, strip 564.
+TIFFFillStrip: Invalid strip byte count 0, strip 565.
+TIFFFillStrip: Invalid strip byte count 0, strip 566.
+TIFFFillStrip: Invalid strip byte count 0, strip 567.
+TIFFFillStrip: Invalid strip byte count 0, strip 568.
+TIFFFillStrip: Invalid strip byte count 0, strip 569.
+TIFFFillStrip: Invalid strip byte count 0, strip 570.
+TIFFFillStrip: Invalid strip byte count 0, strip 571.
+TIFFFillStrip: Invalid strip byte count 0, strip 572.
+TIFFFillStrip: Invalid strip byte count 0, strip 573.
+TIFFFillStrip: Invalid strip byte count 0, strip 574.
+TIFFFillStrip: Invalid strip byte count 0, strip 575.
+TIFFFillStrip: Invalid strip byte count 0, strip 576.
+TIFFFillStrip: Invalid strip byte count 0, strip 577.
+TIFFFillStrip: Invalid strip byte count 0, strip 578.
+TIFFFillStrip: Invalid strip byte count 0, strip 579.
+TIFFFillStrip: Invalid strip byte count 0, strip 580.
+TIFFFillStrip: Invalid strip byte count 0, strip 581.
+TIFFFillStrip: Invalid strip byte count 0, strip 582.
+TIFFFillStrip: Invalid strip byte count 0, strip 583.
+TIFFFillStrip: Invalid strip byte count 0, strip 584.
+TIFFFillStrip: Invalid strip byte count 0, strip 585.
+TIFFFillStrip: Invalid strip byte count 0, strip 586.
+TIFFFillStrip: Invalid strip byte count 0, strip 587.
+TIFFFillStrip: Invalid strip byte count 0, strip 588.
+TIFFFillStrip: Invalid strip byte count 0, strip 589.
+TIFFFillStrip: Invalid strip byte count 0, strip 590.
+TIFFFillStrip: Invalid strip byte count 0, strip 591.
+TIFFFillStrip: Invalid strip byte count 0, strip 592.
+TIFFFillStrip: Invalid strip byte count 0, strip 593.
+TIFFFillStrip: Invalid strip byte count 0, strip 594.
+TIFFFillStrip: Invalid strip byte count 0, strip 595.
+TIFFFillStrip: Invalid strip byte count 0, strip 596.
+TIFFFillStrip: Invalid strip byte count 0, strip 597.
+TIFFFillStrip: Invalid strip byte count 0, strip 598.
+TIFFFillStrip: Invalid strip byte count 0, strip 599.
+TIFFFillStrip: Invalid strip byte count 0, strip 600.
+TIFFFillStrip: Invalid strip byte count 0, strip 601.
+TIFFFillStrip: Invalid strip byte count 0, strip 602.
+TIFFFillStrip: Invalid strip byte count 0, strip 603.
+TIFFFillStrip: Invalid strip byte count 0, strip 604.
+TIFFFillStrip: Invalid strip byte count 0, strip 605.
+TIFFFillStrip: Invalid strip byte count 0, strip 606.
+TIFFFillStrip: Invalid strip byte count 0, strip 607.
+TIFFFillStrip: Invalid strip byte count 0, strip 608.
+TIFFFillStrip: Invalid strip byte count 0, strip 609.
+TIFFFillStrip: Invalid strip byte count 0, strip 610.
+TIFFFillStrip: Invalid strip byte count 0, strip 611.
+TIFFFillStrip: Invalid strip byte count 0, strip 612.
+TIFFFillStrip: Invalid strip byte count 0, strip 613.
+TIFFFillStrip: Invalid strip byte count 0, strip 614.
+TIFFFillStrip: Invalid strip byte count 0, strip 615.
+TIFFFillStrip: Invalid strip byte count 0, strip 616.
+TIFFFillStrip: Invalid strip byte count 0, strip 617.
+TIFFFillStrip: Invalid strip byte count 0, strip 618.
+TIFFFillStrip: Invalid strip byte count 0, strip 619.
+TIFFFillStrip: Invalid strip byte count 0, strip 620.
+TIFFFillStrip: Invalid strip byte count 0, strip 621.
+TIFFFillStrip: Invalid strip byte count 0, strip 622.
+TIFFFillStrip: Invalid strip byte count 0, strip 623.
+TIFFFillStrip: Invalid strip byte count 0, strip 624.
+TIFFFillStrip: Invalid strip byte count 0, strip 625.
+TIFFFillStrip: Invalid strip byte count 0, strip 626.
+TIFFFillStrip: Invalid strip byte count 0, strip 627.
+TIFFFillStrip: Invalid strip byte count 0, strip 628.
+TIFFFillStrip: Invalid strip byte count 0, strip 629.
+TIFFFillStrip: Invalid strip byte count 0, strip 630.
+TIFFFillStrip: Invalid strip byte count 0, strip 631.
+TIFFFillStrip: Invalid strip byte count 0, strip 632.
+TIFFFillStrip: Invalid strip byte count 0, strip 633.
+TIFFFillStrip: Invalid strip byte count 0, strip 634.
+TIFFFillStrip: Invalid strip byte count 0, strip 635.
+TIFFFillStrip: Invalid strip byte count 0, strip 636.
+TIFFFillStrip: Invalid strip byte count 0, strip 637.
+TIFFFillStrip: Invalid strip byte count 0, strip 638.
+TIFFFillStrip: Invalid strip byte count 0, strip 639.
+TIFFFillStrip: Invalid strip byte count 0, strip 640.
+TIFFFillStrip: Invalid strip byte count 0, strip 641.
+TIFFFillStrip: Invalid strip byte count 0, strip 642.
+TIFFFillStrip: Invalid strip byte count 0, strip 643.
+TIFFFillStrip: Invalid strip byte count 0, strip 644.
+TIFFFillStrip: Invalid strip byte count 0, strip 645.
+TIFFFillStrip: Invalid strip byte count 0, strip 646.
+TIFFFillStrip: Invalid strip byte count 0, strip 647.
+TIFFFillStrip: Invalid strip byte count 0, strip 648.
+TIFFFillStrip: Invalid strip byte count 0, strip 649.
+TIFFFillStrip: Invalid strip byte count 0, strip 650.
+TIFFFillStrip: Invalid strip byte count 0, strip 651.
+TIFFFillStrip: Invalid strip byte count 0, strip 652.
+TIFFFetchDirectory: Can not read TIFF directory count.
+TIFFReadDirectory: Failed to read directory at offset 524296.
+TIFFReadDirectoryCheckOrder: Warning, Invalid TIFF directory; tags are not sorted in ascending order.
+TIFFReadDirectory: Warning, Unknown field with tag 2331 (0x91b) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 1535 (0x5ff) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 65535 (0xffff) encountered.
+TIFFReadDirectory: Warning, Unknown field with tag 2312 (0x908) encountered.
+TIFFFetchNormalTag: Warning, Incorrect count for "PhotometricInterpretation"; tag ignored.
+TIFFFetchNormalTag: Warning, ASCII value for tag "DocumentName" contains null byte in value; value incorrectly truncated during reading due to implementation limitations.
+TIFFFetchNormalTag: Warning, incorrect count for field "PageNumber", expected 2, got 16777729.
+TIFFReadRawStrip: 0: Invalid strip byte count, strip 1.
+
+=================================================================
+==11109==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 1142 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bce7d0a in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:119:16
+    #3 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #4 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #5 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #6 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Direct leak of 1089 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bce7d0a in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:119:16
+    #3 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #4 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #5 0x4e4c9b in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:84:10
+    #6 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 5224 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc804d7 in _TIFFCheckRealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:73:8
+    #3 0x7f707bc80550 in _TIFFCheckMalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:88:9
+    #4 0x7f707bc9932d in TIFFFetchStripThing /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:5412:24
+    #5 0x7f707bc917e8 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3737:10
+    #6 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #7 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #8 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #9 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #10 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 5224 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc804d7 in _TIFFCheckRealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:73:8
+    #3 0x7f707bc80550 in _TIFFCheckMalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:88:9
+    #4 0x7f707bc9932d in TIFFFetchStripThing /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:5412:24
+    #5 0x7f707bc917a3 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3727:10
+    #6 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #7 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #8 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #9 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #10 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 5224 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bd00cb0 in TIFFSetupStrips /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_write.c:545:6
+    #3 0x7f707bcff031 in TIFFWriteCheck /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_write.c:613:46
+    #4 0x7f707bd00117 in TIFFWriteRawStrip /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_write.c:311:7
+    #5 0x4e6641 in cpStrips /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:253:8
+    #6 0x4e5d41 in tiffcp /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:227:11
+    #7 0x4e4cd3 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:89:9
+    #8 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 5224 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bd00c8d in TIFFSetupStrips /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_write.c:543:6
+    #3 0x7f707bcff031 in TIFFWriteCheck /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_write.c:613:46
+    #4 0x7f707bd00117 in TIFFWriteRawStrip /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_write.c:311:7
+    #5 0x4e6641 in cpStrips /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:253:8
+    #6 0x4e5d41 in tiffcp /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:227:11
+    #7 0x4e4cd3 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:89:9
+    #8 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 1296 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc804d7 in _TIFFCheckRealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:73:8
+    #3 0x7f707bc8e876 in _TIFFMergeFields /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirinfo.c:382:4
+    #4 0x7f707bc90be6 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3524:10
+    #5 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #6 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #7 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #8 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #9 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 1264 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc804d7 in _TIFFCheckRealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:73:8
+    #3 0x7f707bc8e876 in _TIFFMergeFields /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirinfo.c:382:4
+    #4 0x7f707bcaf7b5 in TIFFInitCCITTFax3 /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1374:8
+    #5 0x7f707bc84862 in TIFFSetCompressionScheme /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_compress.c:172:14
+    #6 0x7f707bc86ac7 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:231:17
+    #7 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #8 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #9 0x4e533e in tiffcp /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:173:2
+    #10 0x4e4cd3 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:89:9
+    #11 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 192 byte(s) in 4 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bc8f54b in _TIFFCreateAnonField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirinfo.c:641:22
+    #3 0x7f707bc90bd2 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3525:6
+    #4 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #5 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #6 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #7 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #8 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 152 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bcaf886 in InitCCITTFax3 /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1317:3
+    #3 0x7f707bcaf797 in TIFFInitCCITTFax3 /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1370:6
+    #4 0x7f707bc84862 in TIFFSetCompressionScheme /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_compress.c:172:14
+    #5 0x7f707bc86ac7 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:231:17
+    #6 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #7 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #8 0x4e533e in tiffcp /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:173:2
+    #9 0x4e4cd3 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:89:9
+    #10 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 152 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bcaf886 in InitCCITTFax3 /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1317:3
+    #3 0x7f707bcaf797 in TIFFInitCCITTFax3 /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1370:6
+    #4 0x7f707bc84862 in TIFFSetCompressionScheme /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_compress.c:172:14
+    #5 0x7f707bc86ac7 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:231:17
+    #6 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #7 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #8 0x7f707bc90a65 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3500:8
+    #9 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #10 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #11 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #12 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #13 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 128 byte(s) in 4 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bc8f757 in _TIFFCreateAnonField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirinfo.c:713:29
+    #3 0x7f707bc90bd2 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3525:6
+    #4 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #5 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #6 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #7 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #8 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 48 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc88a56 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:516:8
+    #3 0x7f707bcb2e35 in Fax3VSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1195:10
+    #4 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #5 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #6 0x7f707bc9736a in TIFFFetchNormalTag /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:5338:8
+    #7 0x7f707bc91c15 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3821:12
+    #8 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #9 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #10 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #11 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #12 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 24 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc88a56 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:516:8
+    #3 0x7f707bcb2e35 in Fax3VSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1195:10
+    #4 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #5 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #6 0x4e5b60 in tiffcp /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:216:2
+    #7 0x4e4cd3 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:89:9
+    #8 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc804d7 in _TIFFCheckRealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:73:8
+    #3 0x7f707bc929bb in TIFFCheckDirOffset /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:4410:26
+    #4 0x7f707bc906da in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3412:7
+    #5 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #6 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #7 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #8 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #9 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 5 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bc84dee in setByteArray /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:53:19
+    #3 0x7f707bc88dc5 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:563:4
+    #4 0x7f707bcb2e35 in Fax3VSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1195:10
+    #5 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #6 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #7 0x7f707bc944d9 in TIFFFetchNormalTag /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:4777:8
+    #8 0x7f707bc91c15 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3821:12
+    #9 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #10 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #11 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #12 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #13 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 5 byte(s) in 1 object(s) allocated from:
+    #0 0x49eb60 in malloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:145
+    #1 0x7f707bd02c8c in _TIFFmalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:316:10
+    #2 0x7f707bc84dee in setByteArray /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:53:19
+    #3 0x7f707bc88dc5 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:563:4
+    #4 0x7f707bcb2e35 in Fax3VSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1195:10
+    #5 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #6 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #7 0x4e5b60 in tiffcp /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:216:2
+    #8 0x4e4cd3 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:89:9
+    #9 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+Indirect leak of 4 byte(s) in 1 object(s) allocated from:
+    #0 0x49eef8 in realloc /home/acesrc/llvm-project-12.0.1.src/compiler-rt/lib/asan/asan_malloc_linux.cpp:164
+    #1 0x7f707bd02cdc in _TIFFrealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:328:10
+    #2 0x7f707bc804d7 in _TIFFCheckRealloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:73:8
+    #3 0x7f707bc80550 in _TIFFCheckMalloc /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_aux.c:88:9
+    #4 0x7f707bc89022 in _TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:593:16
+    #5 0x7f707bcb2e35 in Fax3VSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_fax3.c:1195:10
+    #6 0x7f707bc8522f in TIFFVSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:844:6
+    #7 0x7f707bc8515d in TIFFSetField /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dir.c:788:11
+    #8 0x7f707bc9736a in TIFFFetchNormalTag /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:5338:8
+    #9 0x7f707bc91c15 in TIFFReadDirectory /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_dirread.c:3821:12
+    #10 0x7f707bce8998 in TIFFClientOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_open.c:466:8
+    #11 0x7f707bd0224e in TIFFFdOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:211:8
+    #12 0x7f707bd02c2e in TIFFOpen /home/acesrc/linuxcve/libtiff/libtiff/libtiff/tif_unix.c:250:8
+    #13 0x4e4ba9 in main /home/acesrc/linuxcve/libtiff/libtiff/tools/tiffsplit.c:71:7
+    #14 0x7f707a3e4c86 in __libc_start_main /build/glibc-CVJwZb/glibc-2.27/csu/../csu/libc-start.c:310
+
+SUMMARY: AddressSanitizer: 26413 byte(s) leaked in 24 allocation(s).
+Makefile:15: recipe for target 'run' failed
+make: *** [run] Error 1

@@ -1,0 +1,42 @@
+0x415028 26 command execution failed!
+0x4150c0 18 Calling good()...
+0x4150d8 16 Finished good()
+0x4150e8 16 /usr/bin/ls -la
+0x415190 4 %s
+
+0x415220 20 %
+0x415198 4 %d
+
+0x4151a0 5 %hd
+
+0x4151a8 4 %f
+
+0x4151b0 5 %ld
+
+0x4151b8 5 %zu
+
+0x4151c0 6 %02x
+
+0x4151c8 5 %ls
+
+0x4151d0 4 %u
+
+0x4151d8 4 %g
+
+0x4151e0 10 %d -- %d
+
+0x4151f0 5 %02x
+0x4151f8 1 
+0x415238 20 %
+0x415200 11 GlobalTrue
+0x415210 12 GlobalFalse
+0x415178 4 
+0x415180 4 
+0x415188 4 
+0x618188 4 
+0x618438 4 
+0x618190 4 
+0x618440 4 
+0x618448 8 
+Calling good()...
+Finished good()

@@ -1,0 +1,4 @@
+configure.in:16:AM_INIT_AUTOMAKE:autotrace:$AUTOTRACE_VERSION:no-define
+configure.in:30:AC_PROG_LIBTOOL:
+configure.in:30:LT_INIT:
+configure.in:37:AC_CONFIG_HEADERS:config.h

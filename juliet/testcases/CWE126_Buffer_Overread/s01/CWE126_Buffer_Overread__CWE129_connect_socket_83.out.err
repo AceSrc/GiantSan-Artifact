@@ -1,0 +1,3 @@
+Calling bad()...
+ERROR: Array index is negative
+Finished bad()

@@ -1,0 +1,33 @@
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+    "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<?xml-stylesheet type="text/css" href="sdocbook.css"   ?>
+<section> <sectioninfo><date> 20. July 2002 </date></sectioninfo>
+<title> ZZIP Programmers Interface </title>   <subtitle>The complete API description.</subtitle>
+
+<!--border-->
+
+<para>
+  The zzip library was orginally developped by Tomi Ollila as a
+  set of zip decoder routines. Guido Draheim did pick it up and
+  wrapped them under a call synopsis matching their posix
+  api calls. Therefore <literal>zzip_open()</literal> has the same 
+  synopsis as <literal>open(2)</literal> but it can open zipped files.
+  Later the distinction was made between magic wrappers and apis
+  for direct access to zip archives and the files contained
+  in the archive. 
+</para>
+<para>
+  These (three) functional apis have little helper functions 
+  alongside including those to get the posix filehandle out of a 
+  zzip handle and to get some attributes about the data handle
+  represented by a zzip handle. Plus checking for error codes
+  that may have been generated from internal checks.
+</para>
+
+<variablelist>
+<varlistentry><term> <ulink url="zzip-basics.html">Basics</ulink> </term>
+<listitem><para> Magic Wrappers, Zip Archive Dir access, Zipped File access </para></listitem></varlistentry>
+<varlistentry><term> <ulink url="zzip-extras.html">Extras</ulink> </term>
+<listitem><para> ext/io init, StdC calls, Error defs, ReOpen, FileStat </para></listitem></varlistentry>
+</variablelist>
+</section>

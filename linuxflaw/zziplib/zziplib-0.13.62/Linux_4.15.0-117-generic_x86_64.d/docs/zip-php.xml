@@ -1,0 +1,67 @@
+<!DOCTYPE H2 PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+    "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<?xml-stylesheet type="text/css" href="sdocbook.css"   ?>
+<title> PHP-ZIP Installation </title>
+
+<para>
+  There have been many problems about the installation of the php-zip
+  module. Since Mid of 2006 the php-zip module does not require the
+  zziplib anymore - it uses its own implementation (which is a clean
+  approach in a double sense - there are no source code comments).
+  So, the following might possibly be only relevant for older
+  installations.
+</para>
+
+<para> Chris Branch has been kind enough to jot down the points of a
+    successful php-zip installation sending it to me in May 2006.
+    I am quoting his text verbatim - again, I do not know whether
+    it works or not as I am not using any PHP for real work.
+</para>
+
+<hr width="60%" align="center">
+<variablelist>
+<varlistentry><term> Software Packages </term>
+<listitem><itemizedlist>
+<listitem><para> Apache 2.4.21 (Linux) </para></listitem>
+<listitem><para> PHP 4.3.9 </para></listitem>
+<listitem><para> ZZIPLIB 0.10.82 </para></listitem>
+<listitem><para> Special requirement: static linking
+</itemizedlist></listitem></varlistentry>
+<varlistentry><term> Setting up ZZIPLIB </term>
+<listitem><itemizedlist>
+<listitem><para> Extract files from zziplib-0.10.82.tar.bz2 to a new folder. </para></listitem>
+<listitem><para> ./configure --enable-static </para></listitem>
+<listitem><para> make </para></listitem>
+<listitem><para> make install </para></listitem>
+</itemizedlist></listitem></varlistentry>
+<varlistentry><term> Rebuilding PHP to include ZIP support </term>
+<listitem><itemizedlist>
+<listitem><para> Modify PHP build file and add "--with-zip" 
+[no dir needed because default /usr/local on my machine] </para></listitem>
+<listitem><para> make </para></listitem>
+<listitem><para> make install </para></listitem>
+</itemizedlist></listitem></varlistentry>
+<varlistentry><term> Modifying the Apache Installation </term>
+<listitem><itemizedlist>
+<listitem><para> Change to Apache source code directory </para></listitem>
+<listitem><para> Change to "src" subdirectory and edit existing Makefile.  [***]
+<screen role="linebreak">
+</screen> Add: EXTRA_LIBS=/usr/local/lib/libzzip.a </para></listitem>
+<listitem><para> Change back to parent folder (cd ..) </para></listitem>
+<listitem><para> make </para></listitem>
+<listitem><para> /usr/local/etc/httpd/bin/apachectl stop </para></listitem>
+<listitem><para> make install </para></listitem>
+<listitem><para> /usr/local/etc/httpd/bin/apachectl start </para></listitem>
+</itemizedlist></listitem></varlistentry>
+</variablelist>
+
+<para><emphasis role="bold">[***] Note:</emphasis>
+That step is the critical step that's not obvious.  Apparently,
+when you build PHP as a static library and include the "--with-zip"
+option, it creates a static library for PHP with an external dependency on
+zziplib.a.  However, the Apache configure script and resulting Makefile
+doesn't take this into account, so Apache won't link unless you hand-edit
+the Apache Makefile.  (Maybe there's a better place to make this change so
+that you don't have to re-fix Apache's Makefile each time you run Apache's
+./configure.  However, I didn't spend the time to investigate that).
+</para>

@@ -1,0 +1,37 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:564: checking for a BSD compatible install
+configure:617: checking whether build environment is sane
+configure:674: checking whether make sets ${MAKE}
+configure:720: checking for working aclocal
+configure:733: checking for working autoconf
+configure:746: checking for working automake
+configure:759: checking for working autoheader
+configure:772: checking for working makeinfo
+configure:809: checking for gcc
+configure:922: checking whether the C compiler (clang -g -O0 -fsanitize=address ) works
+configure:938: clang -o conftest -g -O0 -fsanitize=address   conftest.c  1>&5
+configure:935:1: warning: type specifier missing, defaults to 'int' [-Wimplicit-int]
+main(){return(0);}
+^
+ASAN instrumenting:
+main
+ModuleName: conftest.c
+SourceFilename: conftest.c
+FileName: conftest.c
+EnableStatic: 1
+EnableLoop: 1
+[main Finished]
+=== check records === total: 0 reduced: 0 cached: 0 skiped: 0 fastonly: 0
+1 warning generated.
+configure:964: checking whether the C compiler (clang -g -O0 -fsanitize=address ) is a cross-compiler
+configure:969: checking whether we are using GNU C
+configure:997: checking whether clang accepts -g
+configure:1037: checking whether gcc has bug number 12243
+configure:1058: checking for compress
+configure:1142: checking for deflate in -lz
+configure:1183: checking for floor in -lm
+configure:1225: checking for getopt_long
+configure:1275: checking how to run the C preprocessor
+configure:1356: checking for zlib.h

@@ -1,0 +1,1697 @@
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+       "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<reference><title>zziplib Function List</title>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_error</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_error</refname>
+ <refname>zzip_seterror</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_error</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype><funcprototype><funcdef>void
+zzip_seterror</funcdef><paramdef>(ZZIP_DIR * dir, int errcode) </paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>   The <function>zzip_seterror</function> function just does dir->errcode = errcode
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_open</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_open</refname>
+ <refname>zzip_open_ext_io</refname>
+ <refname>zzip_open_shared_io</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_FILE *
+zzip_open</funcdef><paramdef>(zzip_char_t * filename, int o_flags)
+</paramdef></funcprototype><funcprototype><funcdef>ZZIP_FILE *
+zzip_open_ext_io</funcdef><paramdef>(zzip_char_t * filename, int o_flags, int o_modes,
+                 zzip_strings_t * ext, zzip_plugin_io_t io)
+</paramdef></funcprototype><funcprototype><funcdef>ZZIP_FILE *
+zzip_open_shared_io</funcdef><paramdef>(ZZIP_FILE * stream,
+                    zzip_char_t * filename, int o_flags, int o_modes,
+                    zzip_strings_t * ext, zzip_plugin_io_t io)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>
+  The <function>zzip_open_ext_io</function> function uses explicit ext and io instead of the internal
+  defaults, setting them to zero is equivalent to <function>zzip_open</function>
+</para><para>
+  note that the two flag types have been split into an o_flags
+  (for fcntl-like openflags) and o_modes where the latter shall
+  carry the zzip_flags and possibly accessmodes for unix filesystems.
+  Since this version of zziplib can not write zipfiles, it is not
+  yet used for anything else than zzip-specific modeflags.
+</para><para>
+  The <function>zzip_open_ext_io</function> function returns a new zzip-handle (use <function>zzip_close</function> to return
+  it). On error the <function>zzip_open_ext_io</function> function will return null setting <function>errno(3)</function>.
+</para><para>
+  If any ext_io handlers were used then the referenced structure
+  should be static as the allocated ZZIP_FILE does not copy them.
+</para>
+<para>
+  The <function>zzip_open_shared_io</function> function takes an extra stream argument - if a handle has been
+  then ext/io can be left null and the new stream handle will pick up
+  the ext/io. This should be used only in specific environment however
+  since <function>zzip_file_real</function> does not store any ext-sequence.
+</para><para>
+  The benefit for the <function>zzip_open_shared_io</function> function comes in when the old file handle
+  was openened from a file within a zip archive. When the new file
+  is in the same zip archive then the internal zzip_dir structures
+  will be shared. It is even quicker, as no check needs to be done
+  anymore trying to guess the zip archive place in the filesystem,
+  here we just check whether the zip archive's filepath is a prefix
+  part of the filename to be opened.
+</para><para>
+  Note that the <function>zzip_open_shared_io</function> function is also used by <function>zzip_freopen</function> that
+  will unshare the old handle, thereby possibly closing the handle.
+</para><para>
+  The <function>zzip_open_shared_io</function> function returns a new zzip-handle (use <function>zzip_close</function> to return
+  it). On error the <function>zzip_open_shared_io</function> function will return null setting <function>errno(3)</function>.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_opendir</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_opendir</refname>
+ <refname>zzip_opendir_ext_io</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_DIR *
+zzip_opendir</funcdef><paramdef>(zzip_char_t * filename)
+</paramdef></funcprototype><funcprototype><funcdef>ZZIP_DIR *
+zzip_opendir_ext_io</funcdef><paramdef>(zzip_char_t * filename, int o_modes,
+                    zzip_strings_t * ext, zzip_plugin_io_t io)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  The <function>zzip_opendir_ext_io</function> function uses explicit ext and io instead of the internal 
+  defaults, setting them to zero is equivalent to <function>zzip_opendir</function>
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+ 	Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+ 	Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+  	    All rights reserved,
+ 	    use under the restrictions of the
+ 	    Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_file_real</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_file_real</refname>
+ <refname>zzip_dir_real</refname>
+ <refname>zzip_realdir</refname>
+ <refname>zzip_realfd</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_file_real</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_dir_real</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype><funcprototype><funcdef>void *
+zzip_realdir</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_realfd</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  The <function>zzip_dir_real</function> function checks if the ZZIP_DIR-handle is wrapping
+  a real directory or a zip-archive.
+  Returns 1 for a stat'able directory, and 0 for a handle to zip-archive.
+</para>
+<para>  The <function>zzip_realdir</function> function returns the posix DIR* handle (if one exists).
+  Check before with <function>zzip_dir_real</function> if the
+  the ZZIP_DIR points to a real directory.
+</para>
+<para>  The <function>zzip_realfd</function> function returns the posix file descriptor (if one exists).
+  Check before with <function>zzip_file_real</function> if the
+  the ZZIP_FILE points to a real file.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_tell</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_tell</refname>
+ <refname>zzip_tell32</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_off_t
+zzip_tell</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype><funcprototype><funcdef>long
+zzip_tell32</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  The <function>zzip_tell32</function> function is provided for users who can not use any largefile-mode.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_dir_stat</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_dir_stat</refname>
+ <refname>zzip_file_stat</refname>
+ <refname>zzip_fstat</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_dir_stat</funcdef><paramdef>(ZZIP_DIR * dir, zzip_char_t * name, ZZIP_STAT * zs, int flags)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_file_stat</funcdef><paramdef>(ZZIP_FILE * file, ZZIP_STAT * zs)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_fstat</funcdef><paramdef>(ZZIP_FILE * file, ZZIP_STAT * zs)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  The <function>zzip_file_stat</function> function will obtain information about a opened file _within_ a 
+  zip-archive. The file is supposed to be open (otherwise -1 is returned). 
+  The st_size stat-member contains the uncompressed size. The optional 
+  d_name is never set here. 
+</para>
+<para>  The <function>zzip_fstat</function> function will obtain information about a opened file which may be
+  either real/zipped. The file is supposed to be open (otherwise -1 is 
+  returned). The st_size stat-member contains the uncompressed size. 
+  The optional d_name is never set here. For a real file, we do set the
+  d_csize := st_size and d_compr := 0 for meaningful defaults.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+ 	Guido Draheim &lt;guidod@gmx.de&gt;
+ 	Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002 Guido Draheim
+  	    All rights reserved,
+ 	    use under the restrictions of the
+ 	    Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_strerror</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_strerror</refname>
+ <refname>zzip_strerror_of</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_char_t *
+zzip_strerror</funcdef><paramdef>(int errcode)
+</paramdef></funcprototype><funcprototype><funcdef>zzip_char_t *
+zzip_strerror_of</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  The <function>zzip_strerror_of</function> function fetches the errorcode from the <function>DIR-handle</function> and 
+  runs it through <function>zzip_strerror</function> to obtain the static string
+  describing the error.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+       Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_dir_open</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_dir_open</refname>
+ <refname>zzip_dir_open_ext_io</refname>
+ <refname>zzip_dir_read</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_DIR *
+zzip_dir_open</funcdef><paramdef>(zzip_char_t * filename, zzip_error_t * e)
+</paramdef></funcprototype><funcprototype><funcdef>ZZIP_DIR *
+zzip_dir_open_ext_io</funcdef><paramdef>(zzip_char_t * filename, zzip_error_t * e,
+                     zzip_strings_t * ext, zzip_plugin_io_t io)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_dir_read</funcdef><paramdef>(ZZIP_DIR * dir, ZZIP_DIRENT * d)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  the <function>zzip_dir_open_ext_io</function> function uses explicit ext and io instead of the internal
+  defaults. Setting these to zero is equivalent to <function>zzip_dir_open</function>
+  Note that the referenced ext_io plugin handlers structure must be 
+  static as it is not copied to the returned ZZIP_DIR structure.
+</para>
+<para>  fills the dirent-argument with the values and
+  increments the read-pointer of the dir-argument.
+</para><para>
+  returns 0 if there no entry (anymore).
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;too@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_init_io</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_init_io</refname>
+ <refname>zzip_get_default_io</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_init_io</funcdef><paramdef>(zzip_plugin_io_handlers_t io, int flags)
+</paramdef></funcprototype><funcprototype><funcdef>zzip_plugin_io_t
+zzip_get_default_io</funcdef><paramdef>(void)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  The <function>zzip_get_default_io</function> function returns a zzip_plugin_io_t handle to static defaults
+  wrapping the posix io file functions for actual file access. The
+  returned structure is shared by all threads in the system.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+ 	Guido Draheim &lt;guidod@gmx.de&gt;
+       Mike Nordell &lt;tamlin-@-algonet-se&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2002,2003 Guido Draheim
+  	    All rights reserved,
+ 	    use under the restrictions of the
+ 	    Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_rewinddir</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_rewinddir</refname>
+ <refname>zzip_telldir</refname>
+ <refname>zzip_seekdir</refname>
+ <refname>zzip_telldir32</refname>
+ <refname>zzip_seekdir32</refname>
+ <refpurpose>  </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>void
+zzip_rewinddir</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype><funcprototype><funcdef>zzip_off_t
+zzip_telldir</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype><funcprototype><funcdef>void
+zzip_seekdir</funcdef><paramdef>(ZZIP_DIR * dir, zzip_off_t offset)
+</paramdef></funcprototype><funcprototype><funcdef>long
+zzip_telldir32</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype><funcprototype><funcdef>void
+zzip_seekdir32</funcdef><paramdef>(ZZIP_DIR * dir, long offset)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>  The <function>zzip_rewinddir</function> function is the equivalent of a <function>rewinddir(2)</function> for a realdir or
+  the zipfile in place of a directory. The ZZIP_DIR handle returned from
+  <function>zzip_opendir</function> has a flag saying realdir or zipfile. As for a zipfile,
+  the filenames will include the filesubpath, so take care.
+</para>
+<para>  The <function>zzip_telldir</function> function is the equivalent of <function>telldir(2)</function> for a realdir or zipfile.
+</para>
+<para>  The <function>zzip_seekdir</function> function is the equivalent of <function>seekdir(2)</function> for a realdir or zipfile.
+</para>
+<para>  The <function>zzip_telldir32</function> function is provided for users who can not use any largefile-mode.
+</para>
+<para>  The <function>zzip_seekdir32</function> function is provided for users who can not use any largefile-mode.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+ 	Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+ 	Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+  	    All rights reserved,
+ 	    use under the restrictions of the
+ 	    Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_fopen</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_fopen</refname>
+ <refname>zzip_freopen</refname>
+ <refpurpose>                                                           </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_FILE *
+zzip_fopen</funcdef><paramdef>(zzip_char_t * filename, zzip_char_t * mode)
+</paramdef></funcprototype><funcprototype><funcdef>ZZIP_FILE *
+zzip_freopen</funcdef><paramdef>(zzip_char_t * filename, zzip_char_t * mode, ZZIP_FILE * stream)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>  The <function>zzip_fopen</function> function will <function>fopen(3)</function> a real/zipped file.
+</para><para>
+  It has some magic functionality builtin - it will first try to open
+  the given <emphasis>filename</emphasis> as a normal file. If it does not
+  exist, the given path to the filename (if any) is split into
+  its directory-part and the file-part. A ".zip" extension is
+  then added to the directory-part to create the name of a
+  zip-archive. That zip-archive (if it exists) is being searched
+  for the file-part, and if found a zzip-handle is returned.
+</para><para>
+  Note that if the file is found in the normal fs-directory the
+  returned structure is mostly empty and the <function>zzip_read</function> call will
+  use the libc <function>read(2)</function> to obtain data. Otherwise a <function>zzip_file_open</function>
+  is performed and any error mapped to <function>errno(3)</function>.
+</para><para>
+  unlike the posix-wrapper <function>zzip_open</function> the mode-argument is
+  a string which allows for more freedom to support the extra
+  zzip modes called ZZIP_CASEINSENSITIVE and ZZIP_IGNOREPATH.
+  Currently, this <function>zzip_fopen</function> call will convert the following
+  characters in the mode-string into their corrsponding mode-bits:
+</para><itemizedlist><listitem><para> <literal> "r" : O_RDONLY : </literal> read-only </para></listitem>
+<listitem><para> <literal> "b" : O_BINARY : </literal> binary (win32 specific) </para></listitem>
+<listitem><para> <literal> "f" : O_NOCTTY : </literal> no char device (unix) </para></listitem>
+<listitem><para> <literal> "i" : ZZIP_CASELESS : </literal> inside zip file </para></listitem>
+<listitem><para> <literal> "*" : ZZIP_NOPATHS : </literal> inside zip file only </para></listitem>
+</itemizedlist><para>  all other modes will be ignored for zip-contained entries
+  but they are transferred for compatibility and portability,
+  including these extra sugar bits:
+</para><itemizedlist><listitem><para> <literal> "x" : O_EXCL :</literal> fail if file did exist </para></listitem>
+<listitem><para> <literal> "s" : O_SYNC :</literal> synchronized access </para></listitem>
+<listitem><para> <literal> "n" : O_NONBLOCK :</literal> nonblocking access </para></listitem>
+<listitem><para> <literal> "z#" : compression level :</literal> for zlib </para></listitem>
+<listitem><para> <literal> "g#" : group access :</literal> unix access bits </para></listitem>
+<listitem><para> <literal> "u#" : owner access :</literal> unix access bits </para></listitem>
+<listitem><para> <literal> "o#" : world access :</literal> unix access bits </para></listitem>
+</itemizedlist><para>  ... the access bits are in traditional unix bit format
+  with 7 = read/write/execute, 6 = read/write, 4 = read-only.
+</para><para>
+  The default access mode is 0664, and the compression level
+  is ignored since the lib can not yet write zip files, otherwise
+  it would be the initialisation value for the zlib deflateInit
+  where 0 = no-compression, 1 = best-speed, 9 = best-compression.
+</para><para>
+  The <function>zzip_fopen</function> function returns a new zzip-handle (use <function>zzip_close</function> to return
+  it). On error the <function>zzip_fopen</function> function will return null setting <function>errno(3)</function>.
+</para>
+<para>
+  The <function>zzip_freopen</function> function receives an additional argument pointing to
+  a ZZIP_FILE* being already in use. If this extra argument is
+  null then the <function>zzip_freopen</function> function is identical with calling <function>zzip_fopen</function>
+</para><para>
+  Per default, the old file stream is closed and only the internal
+  structures associated with it are kept. These internal structures
+  may be reused for the return value, and this is a lot quicker when
+  the filename matches a zipped file that is incidently in the very
+  same zip arch as the old filename wrapped in the stream struct.
+</para><para>
+  That's simply because the zip arch's central directory does not
+  need to be read again. As an extension for the <function>zzip_freopen</function> function, if the
+  mode-string contains a "q" then the old stream is not closed but
+  left untouched, instead it is only given as a hint that a new
+  file handle may share/copy the zip arch structures of the old file
+  handle if that is possible, i.e when they are in the same zip arch.
+</para><para>
+  The <function>zzip_freopen</function> function returns a new zzip-handle (use <function>zzip_close</function> to return
+  it). On error the <function>zzip_freopen</function> function will return null setting <function>errno(3)</function>.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+<refsect1><title>See Also</title><para> fopen(2)
+</para></refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_dirhandle</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_dirhandle</refname>
+ <refname>zzip_dirfd</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_DIR *
+zzip_dirhandle</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_dirfd</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>   The <function>zzip_dirfd</function> function will just return dir->fd
+</para><para>
+  If a ZZIP_DIR does point to a zipfile then the file-descriptor of that
+  zipfile is returned, otherwise a NULL is returned and the ZZIP_DIR wraps
+  a real directory DIR (if you have dirent on your system).
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_seek</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_seek</refname>
+ <refname>zzip_seek32</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_off_t
+zzip_seek</funcdef><paramdef>(ZZIP_FILE * fp, zzip_off_t offset, int whence)
+</paramdef></funcprototype><funcprototype><funcdef>long
+zzip_seek32</funcdef><paramdef>(ZZIP_FILE * fp, long offset, int whence)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  The <function>zzip_seek32</function> function is provided for users who can not use any largefile-mode.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_read</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_read</refname>
+ <refname>zzip_fread</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_ssize_t
+zzip_read</funcdef><paramdef>(ZZIP_FILE * fp, void *buf, zzip_size_t len)
+</paramdef></funcprototype><funcprototype><funcdef>zzip_size_t
+zzip_fread</funcdef><paramdef>(void *ptr, zzip_size_t size, zzip_size_t nmemb, ZZIP_FILE * file)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_dir_free</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_dir_free</refname>
+ <refname>zzip_dir_close</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_dir_free</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_dir_close</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  It will also <function>free(2)</function> the <function>ZZIP_DIR-handle</function> given.
+  the counterpart for <function>zzip_dir_open</function>
+  see also <function>zzip_dir_free</function>
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;too@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_fclose</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_fclose</refname>
+ <refname>zzip_close</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_fclose</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_close</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_dir_fdopen</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_dir_fdopen</refname>
+ <refname>zzip_dir_fdopen_ext_io</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_DIR *
+zzip_dir_fdopen</funcdef><paramdef>(int fd, zzip_error_t * errcode_p)
+</paramdef></funcprototype><funcprototype><funcdef>ZZIP_DIR *
+zzip_dir_fdopen_ext_io</funcdef><paramdef>(int fd, zzip_error_t * errcode_p,
+                       zzip_strings_t * ext, const zzip_plugin_io_t io)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  the <function>zzip_dir_fdopen_ext_io</function> function uses explicit ext and io instead of the internal
+  defaults, setting these to zero is equivalent to <function>zzip_dir_fdopen</function>
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;too@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_dir_alloc_ext_io</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_dir_alloc_ext_io</refname>
+ <refname>zzip_dir_alloc</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_DIR *
+zzip_dir_alloc_ext_io</funcdef><paramdef>(zzip_strings_t * ext, const zzip_plugin_io_t io)
+</paramdef></funcprototype><funcprototype><funcdef>ZZIP_DIR *
+zzip_dir_alloc</funcdef><paramdef>(zzip_strings_t * fileext)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> 
+<para>  the <function>zzip_dir_alloc</function> function is obsolete - it was generally used for implementation
+  and exported to let other code build on it. It is now advised to
+  use <function>zzip_dir_alloc_ext_io</function> now on explicitly, just set that second
+  argument to zero to achieve the same functionality as the old style.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;too@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_readdir</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_readdir</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_DIRENT *
+zzip_readdir</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+ 	Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+ 	Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+  	    All rights reserved,
+ 	    use under the restrictions of the
+ 	    Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_closedir</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_closedir</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_closedir</funcdef><paramdef>(ZZIP_DIR * dir)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+ 	Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+ 	Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+  	    All rights reserved,
+ 	    use under the restrictions of the
+ 	    Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_errno</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_errno</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_errno</funcdef><paramdef>(int errcode)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para> 
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+       Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions 
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_file_close</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_file_close</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_file_close</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_file_open</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_file_open</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>ZZIP_FILE *
+zzip_file_open</funcdef><paramdef>(ZZIP_DIR * dir, zzip_char_t * name, int o_mode)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_inflate_init</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_inflate_init</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>static int
+zzip_inflate_init</funcdef><paramdef>(ZZIP_FILE * fp, struct zzip_dir_hdr *hdr)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_file_read</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_file_read</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_ssize_t
+zzip_file_read</funcdef><paramdef>(ZZIP_FILE * fp, void *buf, zzip_size_t len)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_rewind</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_rewind</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+zzip_rewind</funcdef><paramdef>(ZZIP_FILE * fp)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;Tomi.Ollila@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_compr_str</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_compr_str</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_char_t *
+zzip_compr_str</funcdef><paramdef>(int compr)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>__zzip_fetch_disk_trailer</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>__zzip_fetch_disk_trailer</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+__zzip_fetch_disk_trailer</funcdef><paramdef>(int fd, zzip_off_t filesize,
+                          struct _disk_trailer *_zzip_restrict trailer,
+                          zzip_plugin_io_t io)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;too@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>__zzip_parse_root_directory</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>__zzip_parse_root_directory</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+__zzip_parse_root_directory</funcdef><paramdef>(int fd,
+                            struct _disk_trailer *trailer,
+                            struct zzip_dir_hdr **hdr_return,
+                            zzip_plugin_io_t io)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;too@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>__zzip_try_open</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>__zzip_try_open</refname>
+ <refpurpose>... </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/lib.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>int
+__zzip_try_open</funcdef><paramdef>(zzip_char_t * filename, int filemode,
+                zzip_strings_t * ext, zzip_plugin_io_t io)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>(missing description)</para>
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+       Tomi Ollila &lt;too@iki.fi&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 1999,2000,2001,2002,2003 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+</reference>
+

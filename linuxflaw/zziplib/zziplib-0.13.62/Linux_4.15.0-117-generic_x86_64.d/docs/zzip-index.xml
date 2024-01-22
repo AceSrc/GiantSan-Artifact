@@ -1,0 +1,58 @@
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+    "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<?xml-stylesheet type="text/css" href="sdocbook.css"   ?>
+<section> <sectioninfo><date> created 1.Jun.2000, last updated 09.Feb.2003 </date></sectioninfo>
+<title> The Library </title> <subtitle>Overview</subtitle>
+
+<!--border-->
+
+<!-- 1. section of zzip-zip.html -->
+
+<para>
+ The <ulink url="zziplib.html">zziplib library</ulink> is intentionally
+ lightweight, it offers the ability to easily extract data from 
+ files archived in a single zip file. Applications can bundle
+ files into a single zip archive and access them.
+ The implementation is based only on the (free) subset of 
+ compression with the <ulink url="http://www.gzip.org/zlib">
+ zlib algorithm</ulink> which is actually used by the <constant>zip/unzip</constant> tools.
+</para>
+
+<blockquote><para>
+ The library allows reading zip archives in a number of ways,
+</para></blockquote><variablelist>
+<varlistentry><term>archive mode:</term>
+<listitem><para>  reading the zip directory and extracting files from it.
+      This is the traditional mode as seen with unzip-utilities.
+      Some extra unzip-utiles for transparent/magic mode are 
+      shipped as&nbsp;well.
+</para></listitem></varlistentry>
+<varlistentry><term>replacement mode:</term>
+<listitem><para>  Use ZZIP_FILE / ZZIP_DIR pointers provided by zziplib and
+      put them to work with routines originally developped to
+      work with real directories and file handles. The API calls
+      do follow traditional synopsis from posix/stdio.
+</para></listitem></varlistentry>
+<varlistentry><term>transparent mode:</term>
+<listitem><para>  Use replacement handles and allow the open()-calls to 
+      automatically detect when a file is contained in a zip 
+      archive or when it is a real file in the file system.
+      A filepath can be partly in a real filesystem and partly
+      within the zip archive when one is seen.
+</para></listitem></varlistentry>
+<varlistentry><term> ext magic </term>
+<listitem><para>  Use the same filepath to access either a zipped or real
+      file - it looks for a real file and there is none then
+      every subdirectory of the path is checked, a ".zip"
+      extension appended, and the zipped file transparently
+      opened. This can speed up dat-file development 
+      dramatically.
+</para></listitem></varlistentry>
+<varlistentry><term> io/xor magic </term>
+<listitem><para>  The access to the filesystem can be hooked up - examples
+      are given for xor obfuscation which is great for game
+      artwork and AI data. A small intro for SDLrwops usage is
+      given as well.
+</para></listitem></varlistentry>
+</variablelist>
+</section>

@@ -1,0 +1,43 @@
+0x415cf8 18 Calling good()...
+0x415d10 16 Finished good()
+0x415d20 12 abc/opqrstu
+0x415d20 12 abc/opqrstu
+0x415dc8 4 %s
+
+0x415e58 20 %
+0x415dd0 4 %d
+
+0x415dd8 5 %hd
+
+0x415de0 4 %f
+
+0x415de8 5 %ld
+
+0x415df0 5 %zu
+
+0x415df8 6 %02x
+
+0x415e00 5 %ls
+
+0x415e08 4 %u
+
+0x415e10 4 %g
+
+0x415e18 10 %d -- %d
+
+0x415e28 5 %02x
+0x415e30 1 
+0x415e70 20 %
+0x415e38 11 GlobalTrue
+0x415e48 12 GlobalFalse
+0x415db0 4 
+0x415db8 4 
+0x415dc0 4 
+0x619188 4 
+0x619438 4 
+0x619190 4 
+0x619440 4 
+0x619448 8 
+Calling good()...
+3
+Finished good()

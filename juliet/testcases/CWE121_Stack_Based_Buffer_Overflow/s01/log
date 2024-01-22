@@ -1,0 +1,264 @@
+clang-12: warning: io.o: 'linker' input unused [-Wunused-command-line-argument]
+clang-12: warning: std_thread.o: 'linker' input unused [-Wunused-command-line-argument]
+clang-12: warning: -lpthread: 'linker' input unused [-Wunused-command-line-argument]
+clang-12: warning: -lm: 'linker' input unused [-Wunused-command-line-argument]
+ASAN instrumenting:
+CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34_good
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+FileName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+EnableStatic: 1
+EnableLoop: 1
+[CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34_good Finished]
+=== check records === total: 0 reduced: 0 cached: 0 skiped: 0 fastonly: 0
+; Function Attrs: nounwind sanitize_address uwtable
+define dso_local void @CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34_good() local_unnamed_addr #0 !dbg !17 {
+entry:
+  tail call fastcc void @goodG2B(), !dbg !20
+  tail call fastcc void @goodB2G(), !dbg !21
+  ret void, !dbg !22
+}
+
+ASAN instrumenting:
+main
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+FileName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+EnableStatic: 1
+EnableLoop: 1
+[main Finished]
+=== check records === total: 0 reduced: 0 cached: 0 skiped: 0 fastonly: 0
+; Function Attrs: nounwind sanitize_address uwtable
+define dso_local i32 @main(i32 %argc, i8** nocapture readnone %argv) local_unnamed_addr #0 !dbg !23 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %argc, metadata !31, metadata !DIExpression()), !dbg !33
+  call void @llvm.dbg.value(metadata i8** %argv, metadata !32, metadata !DIExpression()), !dbg !33
+  %call = tail call i64 @time(i64* null) #9, !dbg !34
+  %conv = trunc i64 %call to i32, !dbg !35
+  tail call void @srand(i32 %conv) #9, !dbg !36
+  tail call void @printLine(i8* getelementptr inbounds ([18 x i8], [18 x i8]* @.str, i64 0, i64 0)) #9, !dbg !37
+  tail call fastcc void @goodG2B() #9, !dbg !38
+  tail call fastcc void @goodB2G() #9, !dbg !40
+  tail call void @printLine(i8* getelementptr inbounds ([16 x i8], [16 x i8]* @.str.1, i64 0, i64 0)) #9, !dbg !41
+  ret i32 0, !dbg !42
+}
+
+ASAN instrumenting:
+goodG2B
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+FileName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+Building Quasi Bound
+Value:   %buffer = alloca [10 x i32], align 16
+ub:   %Quasi_Bound = alloca i64, align 8, !dbg !50, !nosanitize !2
+EnableStatic: 1
+EnableLoop: 1
+[Quasi Bound Checks]: 
+  Function: goodG2B
+      %2 = load i32, i32* %arrayidx4, align 4, !dbg !52, !tbaa !45 from   %buffer = alloca [10 x i32], align 16
+  quasi bound id:   %Quasi_Bound = alloca i64, align 8, !dbg !50, !nosanitize !2
+Watching: 0x560b64faf140 0x560b650a0360
+Testing:   %buffer = alloca [10 x i32], align 16   %Quasi_Bound = alloca i64, align 8, !dbg !50, !nosanitize !2
+Insert Bounded Loop Check
+    L:   %37 = ptrtoint [10 x i32]* %12 to i64, !dbg !62
+Delta:   %38 = sub i64 %quasi_bound_for_check, %37, !dbg !62
+Recover: 0
+[goodG2B Finished]
+=== check records === total: 2 reduced: 0 cached: 1 skiped: 0 fastonly: 0
+; Function Attrs: noinline nounwind sanitize_address uwtable
+define internal fastcc void @goodG2B() unnamed_addr #4 !dbg !59 {
+entry:
+  %Quasi_Bound = alloca i64, align 8, !dbg !76, !nosanitize !2
+  %asan_local_stack_base = alloca i64, align 8
+  %0 = load i32, i32* @__asan_option_detect_stack_use_after_return, align 4
+  %1 = icmp ne i32 %0, 0
+  br i1 %1, label %2, label %4
+
+2:                                                ; preds = %entry
+  %3 = call i64 @__asan_stack_malloc_1(i64 128)
+  br label %4
+
+4:                                                ; preds = %entry, %2
+  %5 = phi i64 [ 0, %entry ], [ %3, %2 ]
+  %6 = icmp eq i64 %5, 0
+  br i1 %6, label %7, label %9
+
+7:                                                ; preds = %4
+  %MyAlloca = alloca i8, i64 128, align 32
+  %8 = ptrtoint i8* %MyAlloca to i64
+  br label %9
+
+9:                                                ; preds = %4, %7
+  %10 = phi i64 [ %5, %4 ], [ %8, %7 ]
+  store i64 %10, i64* %asan_local_stack_base, align 8
+  %11 = add i64 %10, 32
+  %12 = inttoptr i64 %11 to [10 x i32]*
+  %13 = inttoptr i64 %10 to i64*
+  store i64 1102416563, i64* %13, align 8
+  %14 = add i64 %10, 8
+  %15 = inttoptr i64 %14 to i64*
+  store i64 ptrtoint ([20 x i8]* @___asan_gen_ to i64), i64* %15, align 8
+  %16 = add i64 %10, 16
+  %17 = inttoptr i64 %16 to i64*
+  store i64 ptrtoint (void ()* @goodG2B to i64), i64* %17, align 8
+  %18 = lshr i64 %10, 3
+  %19 = add i64 %18, 2147450880
+  %20 = add i64 %19, 0
+  %21 = inttoptr i64 %20 to i64*
+  store i64 -506381209984437775, i64* %21, align 1
+  %22 = add i64 %19, 8
+  %23 = inttoptr i64 %22 to i64*
+  store i64 -868082074056920072, i64* %23, align 1
+  call void @llvm.dbg.value(metadata i32 -1, metadata !61, metadata !DIExpression()), !dbg !80
+  call void @llvm.dbg.value(metadata i32 7, metadata !61, metadata !DIExpression()), !dbg !80
+  call void @llvm.dbg.value(metadata i32 7, metadata !62, metadata !DIExpression()), !dbg !80
+  call void @llvm.dbg.value(metadata i32 7, metadata !68, metadata !DIExpression()), !dbg !81
+  %24 = bitcast [10 x i32]* %12 to i8*, !dbg !82
+  %25 = add i64 %19, 4, !dbg !82
+  %26 = inttoptr i64 %25 to i32*, !dbg !82
+  store i32 1061109310, i32* %26, align 1, !dbg !82
+  %27 = add i64 %19, 8, !dbg !82
+  %28 = inttoptr i64 %27 to i8*, !dbg !82
+  store i8 64, i8* %28, align 1, !dbg !82
+  call void @llvm.lifetime.start.p0i8(i64 40, i8* nonnull %24) #9, !dbg !82
+  call void @llvm.dbg.declare(metadata i64* %asan_local_stack_base, metadata !72, metadata !DIExpression(DW_OP_deref, DW_OP_plus_uconst, 32)), !dbg !83
+  %29 = call i8* @__asan_memset(i8* %24, i32 0, i64 40), !dbg !83
+  %arrayidx = getelementptr inbounds [10 x i32], [10 x i32]* %12, i64 0, i64 7, !dbg !84
+  store i32 1, i32* %arrayidx, align 4, !dbg !85, !tbaa !86
+  call void @llvm.dbg.value(metadata i32 0, metadata !70, metadata !DIExpression()), !dbg !90
+  %30 = ptrtoint [10 x i32]* %12 to i64, !dbg !76
+  store i64 %30, i64* %Quasi_Bound, align 8, !dbg !76
+  br label %for.body, !dbg !76
+
+for.body:                                         ; preds = %9, %35
+  %indvars.iv = phi i64 [ 0, %9 ], [ %indvars.iv.next, %35 ]
+  call void @llvm.dbg.value(metadata i64 %indvars.iv, metadata !70, metadata !DIExpression()), !dbg !90
+  %arrayidx4 = getelementptr inbounds [10 x i32], [10 x i32]* %12, i64 0, i64 %indvars.iv, !dbg !91
+  %31 = load i64, i64* %Quasi_Bound, align 8, !dbg !91
+  %32 = ptrtoint i32* %arrayidx4 to i64, !dbg !91
+  %33 = icmp uge i64 %32, %31, !dbg !91
+  br i1 %33, label %34, label %35, !dbg !91
+
+34:                                               ; preds = %for.body
+  store i64 %32, i64* %Quasi_Bound, align 8, !dbg !91
+  br label %35, !dbg !91
+
+35:                                               ; preds = %for.body, %34
+  %36 = load i32, i32* %arrayidx4, align 4, !dbg !91, !tbaa !86
+  tail call void @printIntLine(i32 %36) #9, !dbg !94
+  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1, !dbg !95
+  call void @llvm.dbg.value(metadata i64 %indvars.iv.next, metadata !70, metadata !DIExpression()), !dbg !90
+  %exitcond = icmp ne i64 %indvars.iv.next, 10, !dbg !96
+  br i1 %exitcond, label %for.body, label %if.end, !dbg !76, !llvm.loop !97
+
+if.end:                                           ; preds = %35
+  %quasi_bound_for_check = load volatile i64, i64* %Quasi_Bound, align 8, !dbg !101
+  %37 = ptrtoint [10 x i32]* %12 to i64, !dbg !101
+  %R = add i64 %37, %72, !dbg !101
+  %38 = lshr i64 %37, 3, !dbg !101
+  %39 = add i64 %38, 2147450880, !dbg !101
+  %40 = inttoptr i64 %39 to i8*, !dbg !101
+  %41 = load volatile i8, i8* %40, align 1, !dbg !101
+  %42 = icmp ule i8 %41, 64, !dbg !101
+  %43 = sub i8 67, %41, !dbg !101
+  %44 = zext i8 %43 to i64, !dbg !101
+  %45 = zext i1 %42 to i64, !dbg !101
+  %46 = shl i64 %45, %44, !dbg !101
+  %47 = lshr i64 %37, 3, !dbg !101
+  %48 = shl i64 %47, 3, !dbg !101
+  %49 = add i64 %46, %48, !dbg !101
+  %50 = icmp ugt i64 %R, %49, !dbg !101
+  br i1 %50, label %51, label %71, !dbg !101
+
+51:                                               ; preds = %if.end
+  %52 = sub i64 %R, %46, !dbg !101
+  %53 = lshr i64 %52, 3, !dbg !101
+  %54 = add i64 %53, 2147450880, !dbg !101
+  %55 = inttoptr i64 %54 to i8*, !dbg !101
+  %56 = load volatile i8, i8* %55, align 1, !dbg !101
+  %57 = icmp ne i8 %41, %56, !dbg !101
+  br i1 %57, label %58, label %59, !dbg !101
+
+58:                                               ; preds = %51
+  call void @__asan_report_load2(i64 %37) #10, !dbg !101
+  unreachable, !dbg !101
+
+59:                                               ; preds = %51
+  %60 = sub i64 %R, 1, !dbg !101
+  %61 = lshr i64 %60, 3, !dbg !101
+  %62 = add i64 %61, 2147450880, !dbg !101
+  %63 = inttoptr i64 %62 to i8*, !dbg !101
+  %64 = load volatile i8, i8* %63, align 1, !dbg !101
+  %65 = and i64 %R, 7, !dbg !101
+  %66 = trunc i64 %65 to i8, !dbg !101
+  %67 = sub i8 72, %66, !dbg !101
+  %68 = icmp ugt i8 %64, %67, !dbg !101
+  br i1 %68, label %69, label %70, !dbg !101
+
+69:                                               ; preds = %59
+  call void @__asan_report_load2(i64 %37) #10, !dbg !101
+  unreachable, !dbg !101
+
+70:                                               ; preds = %59
+  br label %71, !dbg !101
+
+71:                                               ; preds = %if.end, %70
+  %72 = sub i64 %quasi_bound_for_check, %37, !dbg !101
+  %73 = add i64 %19, 4, !dbg !101
+  %74 = inttoptr i64 %73 to i32*, !dbg !101
+  store i32 -117901064, i32* %74, align 1, !dbg !101
+  %75 = add i64 %19, 8, !dbg !101
+  %76 = inttoptr i64 %75 to i8*, !dbg !101
+  store i8 -8, i8* %76, align 1, !dbg !101
+  call void @llvm.lifetime.end.p0i8(i64 40, i8* nonnull %24) #9, !dbg !101
+  store i64 1172321806, i64* %13, align 8, !dbg !102
+  %77 = icmp ne i64 %5, 0, !dbg !102
+  br i1 %77, label %78, label %87, !dbg !102
+
+78:                                               ; preds = %71
+  %79 = add i64 %19, 0, !dbg !102
+  %80 = inttoptr i64 %79 to i64*, !dbg !102
+  store i64 -723401728380766731, i64* %80, align 1, !dbg !102
+  %81 = add i64 %19, 8, !dbg !102
+  %82 = inttoptr i64 %81 to i64*, !dbg !102
+  store i64 -723401728380766731, i64* %82, align 1, !dbg !102
+  %83 = add i64 %5, 120, !dbg !102
+  %84 = inttoptr i64 %83 to i64*, !dbg !102
+  %85 = load i64, i64* %84, align 8, !dbg !102
+  %86 = inttoptr i64 %85 to i8*, !dbg !102
+  store i8 0, i8* %86, align 1, !dbg !102
+  br label %92, !dbg !102
+
+87:                                               ; preds = %71
+  %88 = add i64 %19, 0, !dbg !102
+  %89 = inttoptr i64 %88 to i64*, !dbg !102
+  store i64 0, i64* %89, align 1, !dbg !102
+  %90 = add i64 %19, 8, !dbg !102
+  %91 = inttoptr i64 %90 to i64*, !dbg !102
+  store i64 0, i64* %91, align 1, !dbg !102
+  br label %92, !dbg !102
+
+92:                                               ; preds = %87, %78
+  ret void, !dbg !102
+}
+
+ASAN instrumenting:
+goodB2G
+ModuleName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+SourceFilename: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+FileName: CWE121_Stack_Based_Buffer_Overflow__CWE129_large_34.c
+EnableStatic: 1
+EnableLoop: 1
+[goodB2G Finished]
+=== check records === total: 0 reduced: 0 cached: 0 skiped: 0 fastonly: 0
+; Function Attrs: noinline nounwind sanitize_address uwtable
+define internal fastcc void @goodB2G() unnamed_addr #4 !dbg !106 {
+entry:
+  call void @llvm.dbg.value(metadata i32 -1, metadata !108, metadata !DIExpression()), !dbg !115
+  call void @llvm.dbg.value(metadata i32 10, metadata !108, metadata !DIExpression()), !dbg !115
+  call void @llvm.dbg.value(metadata i32 10, metadata !109, metadata !DIExpression()), !dbg !115
+  call void @llvm.dbg.value(metadata i32 10, metadata !110, metadata !DIExpression()), !dbg !116
+  tail call void @printLine(i8* getelementptr inbounds ([36 x i8], [36 x i8]* @.str.3, i64 0, i64 0)) #9, !dbg !117
+  ret void, !dbg !120
+}
+

@@ -1,0 +1,372 @@
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+       "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<reference><title>zziplib Function List</title>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_disk_entry_to_data</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_disk_entry_to_data</refname>
+ <refname>zzip_disk_entry_to_file_header</refname>
+ <refname>zzip_disk_entry_strdup_name</refname>
+ <refname>zzip_disk_entry_strdup_comment</refname>
+ <refpurpose> helper functions for (mmapped) zip access api </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/mmapped.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_byte_t *
+zzip_disk_entry_to_data</funcdef><paramdef>(ZZIP_DISK * disk, struct zzip_disk_entry * entry)
+</paramdef></funcprototype><funcprototype><funcdef>struct zzip_file_header *
+zzip_disk_entry_to_file_header</funcdef><paramdef>(ZZIP_DISK * disk, struct zzip_disk_entry *entry)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ char *
+zzip_disk_entry_strdup_name</funcdef><paramdef>(ZZIP_DISK * disk, struct zzip_disk_entry *entry)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ char *
+zzip_disk_entry_strdup_comment</funcdef><paramdef>(ZZIP_DISK * disk, struct zzip_disk_entry *entry)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>
+  The <function>zzip_disk_entry_to_data</function> function augments the other zzip_disk_entry_* helpers: here we move
+  a disk_entry pointer (as returned by _find* functions) into a pointer to
+  the data block right after the file_header. Only disk->buffer would be
+  needed to perform the seek but we check the mmapped range end as well.
+</para>
+<para>  The <function>zzip_disk_entry_to_file_header</function> function does half the job of <function>zzip_disk_entry_to_data</function> where it
+  can augment with <function>zzip_file_header_to_data</function> helper from format/fetch.h
+</para>
+<para>  The <function>zzip_disk_entry_strdup_name</function> function is a big helper despite its little name: in a zip file the
+  encoded filenames are usually NOT zero-terminated but for common usage
+  with libc we need it that way. Secondly, the filename SHOULD be present
+  in the zip central directory but if not then we fallback to the filename
+  given in the file_header of each compressed data portion.
+</para>
+<para>  The <function>zzip_disk_entry_strdup_comment</function> function is similar creating a reference to a zero terminated
+  string but it can only exist in the zip central directory entry.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2003,2004,2006 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_disk_findfile</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_disk_findfile</refname>
+ <refname>zzip_disk_findfirst</refname>
+ <refname>zzip_disk_findnext</refname>
+ <refname>zzip_disk_findmatch</refname>
+ <refpurpose> search for files in the (mmapped) zip central directory </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/mmapped.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>struct zzip_disk_entry *
+zzip_disk_findfile</funcdef><paramdef>(ZZIP_DISK * disk, char *filename,
+                   struct zzip_disk_entry *after, zzip_strcmp_fn_t compare)
+</paramdef></funcprototype><funcprototype><funcdef>struct zzip_disk_entry *
+zzip_disk_findfirst</funcdef><paramdef>(ZZIP_DISK * disk)
+</paramdef></funcprototype><funcprototype><funcdef>struct zzip_disk_entry *
+zzip_disk_findnext</funcdef><paramdef>(ZZIP_DISK * disk, struct zzip_disk_entry *entry)
+</paramdef></funcprototype><funcprototype><funcdef>struct zzip_disk_entry *
+zzip_disk_findmatch</funcdef><paramdef>(ZZIP_DISK * disk, char *filespec,
+                    struct zzip_disk_entry *after,
+                    zzip_fnmatch_fn_t compare, int flags)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>
+  The <function>zzip_disk_findfile</function> function is given a filename as an additional argument, to find the
+  disk_entry matching a given filename. The compare-function is usually
+  strcmp or strcasecmp or perhaps strcoll, if null then strcmp is used.
+  - use null as argument for "after"-entry when searching the first
+  matching entry, otherwise the last returned value if you look for other
+  entries with a special "compare" function (if null then a doubled search
+  is rather useless with this variant of _findfile).
+</para>
+<para>
+  The <function>zzip_disk_findfirst</function> function is the first call of all the zip access functions here.
+  It contains the code to find the first entry of the zip central directory.
+  Here we require the mmapped block to represent a real zip file where the
+  disk_trailer is _last_ in the file area, so that its position would be at
+  a fixed offset from the end of the file area if not for the comment field
+  allowed to be of variable length (which needs us to do a little search
+  for the disk_tailer). However, in this simple implementation we disregard
+  any disk_trailer info telling about multidisk archives, so we just return
+  a pointer to the zip central directory.
+</para><para>
+  For an actual means, we are going to search backwards from the end
+  of the mmaped block looking for the PK-magic signature of a
+  disk_trailer. If we see one then we check the rootseek value to
+  find the first disk_entry of the root central directory. If we find
+  the correct PK-magic signature of a disk_entry over there then we
+  assume we are done and we are going to return a pointer to that label.
+</para><para>
+  The return value is a pointer to the first zzip_disk_entry being checked
+  to be within the bounds of the file area specified by the arguments. If
+  no disk_trailer was found then null is returned, and likewise we only
+  accept a disk_trailer with a seekvalue that points to a disk_entry and
+  both parts have valid PK-magic parts. Beyond some sanity check we try to
+  catch a common brokeness with zip archives that still allows us to find
+  the start of the zip central directory.
+</para>
+<para>
+  The <function>zzip_disk_findnext</function> function takes an existing disk_entry in the central root directory
+  (e.g. from zzip_disk_findfirst) and returns the next entry within in
+  the given bounds of the mmapped file area.
+</para>
+<para>
+  The <function>zzip_disk_findmatch</function> function uses a compare-function with an additional argument
+  and it is called just like fnmatch(3) from POSIX.2 AD:1993), i.e.
+  the argument filespec first and the ziplocal filename second with
+  the integer-flags put in as third to the indirect call. If the
+  platform has fnmatch available then null-compare will use that one
+  and otherwise we fall back to mere strcmp, so if you need fnmatch
+  searching then please provide an implementation somewhere else.
+  - use null as argument for "after"-entry when searching the first
+  matching entry, or the last disk_entry return-value to find the
+  next entry matching the given filespec.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2003,2004,2006 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_disk_fopen</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_disk_fopen</refname>
+ <refname>zzip_disk_entry_fopen</refname>
+ <refname>zzip_disk_fread</refname>
+ <refname>zzip_disk_fclose</refname>
+ <refname>zzip_disk_feof</refname>
+ <refpurpose> openening a file part wrapped within a (mmapped) zip archive </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/mmapped.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip__new__ ZZIP_DISK_FILE *
+zzip_disk_fopen</funcdef><paramdef>(ZZIP_DISK * disk, char *filename)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_DISK_FILE *
+zzip_disk_entry_fopen</funcdef><paramdef>(ZZIP_DISK * disk, ZZIP_DISK_ENTRY * entry)
+</paramdef></funcprototype><funcprototype><funcdef>zzip_size_t
+zzip_disk_fread</funcdef><paramdef>(void *ptr, zzip_size_t sized, zzip_size_t nmemb,
+                ZZIP_DISK_FILE * file)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_disk_fclose</funcdef><paramdef>(ZZIP_DISK_FILE * file)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_disk_feof</funcdef><paramdef>(ZZIP_DISK_FILE * file)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>
+  The <function>zzip_disk_fopen</function> function opens a file found by name, so it does a search into
+  the zip central directory with <function>zzip_disk_findfile</function> and whatever
+  is found first is given to <function>zzip_disk_entry_fopen</function>
+</para>
+<para>
+  the ZZIP_DISK_FILE* is rather simple in just encapsulating the
+  arguments given to the <function>zzip_disk_entry_fopen</function> function plus a zlib deflate buffer.
+  Note that the ZZIP_DISK pointer does already contain the full
+  mmapped file area of a zip disk, so open()ing a file part within
+  that area happens to be a lookup of its bounds and encoding. That
+  information is memorized on the ZZIP_DISK_FILE so that subsequent
+  _read() operations will be able to get the next data portion or
+  return an eof condition for that file part wrapped in the zip archive.
+</para>
+<para>
+  The <function>zzip_disk_fread</function> function reads more bytes into the output buffer specified as
+  arguments. The return value is null on eof or error, the stdio-like
+  interface can not distinguish between these so you need to check
+  with <function>zzip_disk_feof</function> for the difference.
+</para>
+<para>  The <function>zzip_disk_fclose</function> function releases any zlib decoder info needed for decompression
+  and dumps the ZZIP_DISK_FILE* then.
+</para>
+<para>
+  The <function>zzip_disk_feof</function> function allows to distinguish an error from an eof condition.
+  Actually, if we found an error but we did already reach eof then we
+  just keep on saying that it was an eof, so the app can just continue.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2003,2004,2006 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_disk_mmap</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_disk_mmap</refname>
+ <refname>zzip_disk_init</refname>
+ <refname>zzip_disk_new</refname>
+ <refname>zzip_disk_munmap</refname>
+ <refname>zzip_disk_open</refname>
+ <refname>zzip_disk_buffer</refname>
+ <refname>zzip_disk_close</refname>
+ <refpurpose> turn a filehandle into a mmapped zip disk archive handle </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/mmapped.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip__new__ ZZIP_DISK *
+zzip_disk_mmap</funcdef><paramdef>(int fd)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_disk_init</funcdef><paramdef>(ZZIP_DISK * disk, void *buffer, zzip_size_t buflen)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_DISK *
+zzip_disk_new</funcdef><paramdef>(void)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_disk_munmap</funcdef><paramdef>(ZZIP_DISK * disk)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_DISK *
+zzip_disk_open</funcdef><paramdef>(char *filename)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_DISK *
+zzip_disk_buffer</funcdef><paramdef>(void *buffer, size_t buflen) </paramdef></funcprototype><funcprototype><funcdef>int
+zzip_disk_close</funcdef><paramdef>(ZZIP_DISK * disk)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>
+  The <function>zzip_disk_mmap</function> function uses the given file-descriptor to detect the length of the
+  file and calls the system <function>mmap(2)</function> to put it in main memory. If it is
+  successful then a newly allocated ZZIP_DISK* is returned with
+  disk->buffer pointing to the mapview of the zipdisk content.
+</para>
+<para>  The <function>zzip_disk_init</function> function does primary initialization of a disk-buffer struct.
+</para>
+<para>  The <function>zzip_disk_new</function> function allocates a new disk-buffer with <function>malloc(3)</function>
+</para>
+<para>  The <function>zzip_disk_munmap</function> function is the inverse of <function>zzip_disk_mmap</function> and using the system
+  munmap(2) on the buffer area and <function>free(3)</function> on the ZZIP_DISK structure.
+</para>
+<para>
+  The <function>zzip_disk_open</function> function opens the given archive by name and turn the filehandle
+  to  <function>zzip_disk_mmap</function> for bringing it to main memory. If it can not
+  be <function>mmap(2)</function>'ed then we slurp the whole file into a newly <function>malloc(2)</function>'ed
+  memory block. Only if that fails too then we return null. Since handling
+  of disk->buffer is ambigous it should not be snatched away please.
+</para>
+<para>  The <function>zzip_disk_buffer</function> function will attach a buffer with a zip image
+  that was acquired from another source than a file.
+  Note that if zzip_disk_mmap fails then zzip_disk_open
+  will fall back and try to read the full file to memory
+  wrapping a ZZIP_DISK around the memory buffer just as
+  the <function>zzip_disk_buffer</function> function will do. Note that the <function>zzip_disk_buffer</function> function will not
+  own the buffer, it will neither be written nor free()d.
+</para>
+<para>
+  The <function>zzip_disk_close</function> function will release all data needed to access a (mmapped)
+  zip archive, including any malloc()ed blocks, sharedmem mappings
+  and it dumps the handle struct as well.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2003,2004,2006 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+</reference>
+

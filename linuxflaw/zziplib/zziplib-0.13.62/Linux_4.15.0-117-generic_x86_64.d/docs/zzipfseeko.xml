@@ -1,0 +1,288 @@
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+       "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<reference><title>zziplib Function List</title>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_entry_fopen</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_entry_fopen</refname>
+ <refname>zzip_entry_ffile</refname>
+ <refname>zzip_entry_fread</refname>
+ <refname>zzip_entry_fclose</refname>
+ <refname>zzip_entry_feof</refname>
+ <refpurpose> open a file within a zip disk for reading </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/fseeko.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip__new__ ZZIP_ENTRY_FILE *
+zzip_entry_fopen</funcdef><paramdef>(ZZIP_ENTRY * entry, int takeover)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_ENTRY_FILE *
+zzip_entry_ffile</funcdef><paramdef>(FILE * disk, char *filename)
+</paramdef></funcprototype><funcprototype><funcdef>zzip_size_t
+zzip_entry_fread</funcdef><paramdef>(void *ptr, zzip_size_t sized, zzip_size_t nmemb,
+                 ZZIP_ENTRY_FILE * file)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_entry_fclose</funcdef><paramdef>(ZZIP_ENTRY_FILE * file)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_entry_feof</funcdef><paramdef>(ZZIP_ENTRY_FILE * file)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>
+  The <function>zzip_entry_fopen</function> function does take an "entry" argument and copies it (or just takes
+  it over as owner) to a new ZZIP_ENTRY_FILE handle structure. That
+  structure contains also a zlib buffer for decoding. The <function>zzip_entry_fopen</function> function does
+  seek to the file_header of the given "entry" and validates it for the
+  data buffer following it. We do also prefetch some data from the data
+  buffer thereby trying to match the disk pagesize for faster access later.
+  The <function>zzip_entry_fread</function> will then read in chunks of pagesizes which is
+  the size of the internal readahead buffer. If an error occurs then null
+  is returned.
+</para>
+<para>
+  The <function>zzip_entry_ffile</function> function opens a file found by name, so it does a search into
+  the zip central directory with <function>zzip_entry_findfile</function> and whatever
+  is found first is given to <function>zzip_entry_fopen</function>
+</para>
+<para>
+  The <function>zzip_entry_fread</function> function reads more bytes into the output buffer specified as
+  arguments. The return value is null on eof or error, the stdio-like
+  interface can not distinguish between these so you need to check
+  with <function>zzip_entry_feof</function> for the difference.
+</para>
+<para>  The <function>zzip_entry_fclose</function> function releases any zlib decoder info needed for decompression
+  and dumps the ZZIP_ENTRY_FILE struct then.
+</para>
+<para>
+  The <function>zzip_entry_feof</function> function allows to distinguish an error from an eof condition.
+  Actually, if we found an error but we did already reach eof then we
+  just keep on saying that it was an eof, so the app can just continue.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2003,2004 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_entry_data_offset</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_entry_data_offset</refname>
+ <refname>zzip_entry_fread_file_header</refname>
+ <refname>zzip_entry_strdup_name</refname>
+ <refpurpose> helper functions for (fseeko) zip access api </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/fseeko.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip_off_t
+zzip_entry_data_offset</funcdef><paramdef>(ZZIP_ENTRY * entry)
+</paramdef></funcprototype><funcprototype><funcdef>static zzip_off_t
+zzip_entry_fread_file_header</funcdef><paramdef>(ZZIP_ENTRY * entry,
+                             struct zzip_file_header *file_header)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ char *
+zzip_entry_strdup_name</funcdef><paramdef>(ZZIP_ENTRY * entry)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>
+  The <function>zzip_entry_data_offset</function> functions returns the seekval offset of the data portion of the
+  file referenced by the given zzip_entry. It requires an intermediate
+  check of the file_header structure (i.e. it reads it from disk). After
+  this call, the contained diskfile readposition is already set to the
+  data_offset returned here. On error -1 is returned.
+</para>
+<para>  The <function>zzip_entry_fread_file_header</function> functions read the correspoding struct zzip_file_header from
+  the zip disk of the given "entry". The returned off_t points to the
+  end of the file_header where the current fseek pointer has stopped.
+  This is used to immediatly parse out any filename/extras block following
+  the file_header. The return value is null on error.
+</para>
+<para>  The <function>zzip_entry_strdup_name</function> function is a big helper despite its little name: in a zip file the
+  encoded filenames are usually NOT zero-terminated but for common usage
+  with libc we need it that way. Secondly, the filename SHOULD be present
+  in the zip central directory but if not then we fallback to the filename
+  given in the file_header of each compressed data portion.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2003,2004 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+<refentry>
+<refentryinfo>
+ <date>0.13.62</date>
+ <productname>zziplib</productname>
+</refentryinfo>
+
+<refmeta>
+ <refentrytitle>zzip_entry_findfile</refentrytitle>
+ <manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+ <refname>zzip_entry_findfile</refname>
+ <refname>zzip_entry_findfirst</refname>
+ <refname>zzip_entry_findnext</refname>
+ <refname>zzip_entry_free</refname>
+ <refname>zzip_entry_findmatch</refname>
+ <refpurpose> search for files in the (fseeko) zip central directory </refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+
+<funcsynopsis>
+<funcsynopsisinfo>#include &lt;zzip/fseeko.h&gt;
+</funcsynopsisinfo>
+<funcprototype><funcdef>zzip__new__ ZZIP_ENTRY *
+zzip_entry_findfile</funcdef><paramdef>(FILE * disk, char *filename,
+                    ZZIP_ENTRY * _zzip_restrict entry, zzip_strcmp_fn_t compare)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_ENTRY *
+zzip_entry_findfirst</funcdef><paramdef>(FILE * disk)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_ENTRY *
+zzip_entry_findnext</funcdef><paramdef>(ZZIP_ENTRY * _zzip_restrict entry)
+</paramdef></funcprototype><funcprototype><funcdef>int
+zzip_entry_free</funcdef><paramdef>(ZZIP_ENTRY * entry)
+</paramdef></funcprototype><funcprototype><funcdef>zzip__new__ ZZIP_ENTRY *
+zzip_entry_findmatch</funcdef><paramdef>(FILE * disk, char *filespec,
+                     ZZIP_ENTRY * _zzip_restrict entry,
+                     zzip_fnmatch_fn_t compare, int flags)
+</paramdef></funcprototype>
+</funcsynopsis>
+
+</refsynopsisdiv>
+
+<refsect1><title>Description</title> <para>
+  The <function>zzip_entry_findfile</function> function is given a filename as an additional argument, to find the
+  disk_entry matching a given filename. The compare-function is usually
+  strcmp or strcasecmp or perhaps strcoll, if null then strcmp is used.
+  - use null as argument for "old"-entry when searching the first
+  matching entry, otherwise the last returned value if you look for other
+  entries with a special "compare" function (if null then a doubled search
+  is rather useless with this variant of _findfile). If no further entry is
+  found then null is returned and any "old"-entry gets already free()d.
+</para>
+<para>
+  The <function>zzip_entry_findfirst</function> function is the first call of all the zip access functions here.
+  It contains the code to find the first entry of the zip central directory.
+  Here we require the stdio handle to represent a real zip file where the
+  disk_trailer is _last_ in the file area, so that its position would be at
+  a fixed offset from the end of the file area if not for the comment field
+  allowed to be of variable length (which needs us to do a little search
+  for the disk_tailer). However, in this simple implementation we disregard
+  any disk_trailer info telling about multidisk archives, so we just return
+  a pointer to the first entry in the zip central directory of that file.
+</para><para>
+  For an actual means, we are going to search backwards from the end
+  of the mmaped block looking for the PK-magic signature of a
+  disk_trailer. If we see one then we check the rootseek value to
+  find the first disk_entry of the root central directory. If we find
+  the correct PK-magic signature of a disk_entry over there then we
+  assume we are done and we are going to return a pointer to that label.
+</para><para>
+  The return value is a pointer to the first zzip_disk_entry being checked
+  to be within the bounds of the file area specified by the arguments. If
+  no disk_trailer was found then null is returned, and likewise we only
+  accept a disk_trailer with a seekvalue that points to a disk_entry and
+  both parts have valid PK-magic parts. Beyond some sanity check we try to
+  catch a common brokeness with zip archives that still allows us to find
+  the start of the zip central directory.
+</para>
+<para>
+  The <function>zzip_entry_findnext</function> function takes an existing "entry" in the central root directory
+  (e.g. from zzip_entry_findfirst) and moves it to point to the next entry.
+  On error it returns 0, otherwise the old entry. If no further match is
+  found then null is returned and the entry already free()d. If you want
+  to stop searching for matches before that case then please call
+  <function>zzip_entry_free</function> on the cursor struct ZZIP_ENTRY.
+</para>
+<para>  the <function>zzip_entry_free</function> function releases the malloc()ed areas needed for zzip_entry, the
+  pointer is invalid afterwards. The <function>zzip_entry_free</function> function has #define synonyms of
+  zzip_entry_findlast(), zzip_entry_findlastfile(), zzip_entry_findlastmatch()
+</para>
+<para>
+  The <function>zzip_entry_findmatch</function> function uses a compare-function with an additional argument
+  and it is called just like fnmatch(3) from POSIX.2 AD:1993), i.e.
+  the argument filespec first and the ziplocal filename second with
+  the integer-flags put in as third to the indirect call. If the
+  platform has fnmatch available then null-compare will use that one
+  and otherwise we fall back to mere strcmp, so if you need fnmatch
+  searching then please provide an implementation somewhere else.
+  - use null as argument for "after"-entry when searching the first
+  matching entry, or the last disk_entry return-value to find the
+  next entry matching the given filespec. If no further entry is
+  found then null is returned and any "old"-entry gets already free()d.
+</para>
+
+</refsect1>
+<refsect1><title>Author</title> <itemizedlist>
+ <listitem><para>
+       Guido Draheim &lt;guidod@gmx.de&gt;
+</para></listitem></itemizedlist>
+</refsect1>
+<refsect1><title>Copyright</title> <para>
+  Copyright (c) 2003,2004 Guido Draheim
+           All rights reserved,
+           use under the restrictions of the
+           Lesser GNU General Public License
+           or alternatively the restrictions
+           of the Mozilla Public License 1.1
+</para>
+</refsect1>
+
+</refentry>
+</reference>
+

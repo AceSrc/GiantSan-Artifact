@@ -1,0 +1,95 @@
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+    "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<?xml-stylesheet type="text/css" href="sdocbook.css"   ?>
+<section><sectioninfo><date>created 1.Jun.2000, last updated 25.Apr.2002 </date></sectioninfo>
+<title> History and Links </title>           <subtitle>plus Installation and Contact Hints</subtitle>
+
+<!--border--> 
+
+<section>
+<title> A Bit Of History </title>
+
+<para>
+You'll find <ulink url="http://www.gzip.org">gzip</ulink> using the same compression 
+that was written by Jean-loup <ulink url="http://gailly.net">Gailly</ulink>
+for the <ulink url="http://www.info-zip.org">Info-Zip</ulink> Group
+whose <ulink url="http://www.info-zip.org/pub/infozip/Zip.html">Zip</ulink>
+program is compatible with msdos PKZIP program from 
+<ulink url="http://www.pkware.com">PK&nbsp;Ware</ulink>. Then, in collaboration
+with <ulink url="http://www.alumni.caltech.edu/~madler">Mark Adler</ulink>
+he wrote the <ulink url="http://www.gzip.org/zlib">zlib</ulink>
+compression library which was later standardized in the 
+<ulink url="ftp://ftp.uu.net/graphics/png/documents/zlib/zdoc-index.html">
+zlib RFCs</ulink>, namely
+<ulink url="http://www.ietf.org/rfc/rfc1950.txt">RFC 1950</ulink>
+<ulink url="ftp://ftp.uu.net/graphics/png/documents/zlib/rfc-zlib.html.Z">
+zlib&nbsp;3.3</ulink>,
+<ulink url="http://www.ietf.org/rfc/rfc1951.txt">RFC 1951</ulink>
+<ulink url="ftp://ftp.uu.net/graphics/png/documents/zlib/rfc-deflate.html.Z">
+deflate&nbsp;1.3</ulink> and
+<ulink url="http://www.ietf.org/rfc/rfc1952.txt">RFC 1952</ulink>
+<ulink url="ftp://ftp.uu.net/graphics/png/documents/zlib/rfc-gzip.html">
+gzip&nbsp;4.3</ulink>. The free algorithm can be found in lots of places
+today including PPP packet compression and PNG picture compression.
+</para>
+
+</section><section>
+<title> Installation </title>
+
+<para>
+ The installation is from the source .tar.gz tarball does follow
+ the simple gnu style: type <constant>''configure  &amp;&amp; make install''</constant> 
+ in the unpacked directory. This will actually perform the usual 
+ sequence of <constant>''configure &amp;&amp; make &amp;&amp; make install''</constant>. The
+ use of <constant>''make rpm''</constant> will make rpms based on your system
+ setup, and using a decent mingw32 compiler (e.g. the crossgcc
+ from <ulink url="http://libsdl.org/Xmingw32">libsdl.org/Xmingw32</ulink>)
+ will allow you to create windows dlls using a gnu development
+ environment. MSVC and Borland support (Make-)files should be
+ easy to be derived from the <ulink url="Makefile.am">Makefile.am</ulink>
+</para>
+
+</section><section>
+<title> Contact </title>
+
+<para>
+ The library was developed by 
+ <ulink url="mailto:guidod@gmx.de?subject=zziplib">
+ Guido Draheim </ulink> based on the library 
+ <ulink url="http://freshmeat.net/appindex/1999/08/02/933593367.html">
+ <constant>zip08x</constant> </ulink> 
+ by <ulink url="mailto:too@iki.fi"> Tomi Ollila </ulink> (many thanks
+ for his support of the zziplib project). He has provided 
+ a good deal of testing rounds and very helpful comments. 
+ It may be assumed that this library supersedes 
+ <ulink url="http://www.iki.fi/too/sw/zip08x.readme">
+ <constant>zip08x</constant></ulink>, and in April 2002, he 
+ has even given up copyright restrictions coming from zip08x
+ and changed the <ulink url="http://www.iki.fi/too/sw/zip08x.readme">zip08x</ulink> 
+ readme to point to <ulink url="http://zziplib.sf.net">zziplib</ulink>.
+ Anyone who wants to contribute in accessing zip-archives
+ with the zlib-library is hereby kindly invited to send us
+ comments and sourcecode.
+</para>
+
+</section><section>
+<title> Links </title>
+
+<para>
+The <ulink url="zziplib.html">zziplib library</ulink> must be
+linked with the free <emphasis role="bold"><ulink url="http://www.gzip.org/zlib/">zlib</ulink></emphasis>
+<ulink url="http://www.info-zip.org/pub/infozip/zlib">[1]</ulink>
+<ulink url="http://www.lifl.fr/PRIVATE/Manuals/gnulang/zlib">[2]</ulink>
+<ulink url="http://pobox.com/~newt">[3]</ulink> package originally developed 
+by the <ulink url="http://www.info-zip.org">Info-Zip</ulink> Group
+and now maintained at the <ulink url="http://www.gzip.org">GZip</ulink> Group.
+As of late, the pkware appnote.txt has been revised into a whitepaper
+document named
+<ulink url="http://www.pkware.com/products/enterprise/white_papers/appnote.html">
+    "APPNOTE.TXT - .ZIP File Format Specification"</ulink>.
+Be also aware of other zzip like projects, e.g. 
+<ulink url="http://zipios.sourceforge.net">zipios++</ulink> that
+mangles zip access into C++ iostream facilities.
+</para>
+
+</section></section>

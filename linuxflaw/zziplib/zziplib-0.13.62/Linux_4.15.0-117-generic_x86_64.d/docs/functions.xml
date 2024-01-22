@@ -1,0 +1,31 @@
+<!DOCTYPE H2 PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+    "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<?xml-stylesheet type="text/css" href="sdocbook.css"   ?>
+<title> Exported Functions </title>
+<date>2006-09-21</date>
+
+<para>
+  The ZZipLib Project does already provide THREE libraries. The classic
+  zziplib.so (via "zzip/lib.h") is the most prominent one and used in
+  a number of different projects. The zzipfseeko.so ("zzip/fseeko.html")
+  and zzipmmapped.so ("zzip/mmapped.html") are technology demonstrations.
+</para>
+
+<itemizedlist>
+<listitem><ulink url="zzip/lib.h"> zzip/lib.h </ulink> - Main User Library </para></listitem>
+<listitem><ulink url="zzip/mmapped.h"> zzip/mmapped.h </ulink> - MMap Library </para></listitem>
+<listitem><ulink url="zzip/fseeko.h"> zzip/fseeko.h </ulink> - Fseeko Library </para></listitem>
+</itemizedlist>
+
+<para>
+  Additonally, there is a complete set of unpacked documentation - the
+  unix manual pages are translated to html manual pages.
+</para>
+
+<itemizedlist>
+<listitem><ulink url="manual">zzip man pages</ulink>
+</itemizedlist>
+
+<para>&nbsp;</para>
+<para>&nbsp;</para>
+<para>&nbsp;</para>

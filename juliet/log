@@ -1,0 +1,18 @@
+============= Juliet Test Start =============
+working on CWE121_Stack_Based_Buffer_Overflow
+    2934 cases detected
+working on CWE122_Heap_Based_Buffer_Overflow
+    2824 cases detected
+working on CWE124_Buffer_Underwrite
+    644 cases detected
+working on CWE126_Buffer_Overread
+    486 cases detected
+working on CWE127_Buffer_Underread
+    644 cases detected
+working on CWE416_Use_After_Free
+    118 cases detected
+working on CWE476_NULL_Pointer_Dereference
+    234 cases detected
+working on CWE761_Free_Pointer_Not_at_Start_of_Buffer
+    152 cases detected
+============= Juliet Test End =============
